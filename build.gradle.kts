@@ -29,6 +29,9 @@ kotlin {
     js {
         browser {
             binaries.executable()
+            commonWebpackConfig{
+                devServer?.proxy = mutableMapOf("/api" to "http://localhost:9000/")
+            }
         }
     }
     sourceSets {

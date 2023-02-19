@@ -9,6 +9,7 @@ import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import java.io.File
 
 suspend fun getting() {
     loggingConfiguration { DEFAULT_CONSOLE() }
@@ -24,9 +25,10 @@ suspend fun getting() {
         }
     }
     if (response.status == HttpStatusCode.OK) {
-        logger.info("calling api succeeded")
 
         val stringBody: String = response.body()
+        logger.info("calling api succeeded")
+
         val fixtures = fromApiResponse(stringBody)
         FixtureRepository.fixtures.apply {
             clear()
@@ -37,4 +39,18 @@ suspend fun getting() {
         logger.error("calling api failed")
         logger.info(response.body<String>())
     }
+}
+
+suspend fun gettingFromMockFile() {
+    loggingConfiguration { DEFAULT_CONSOLE() }
+    val logger = logger("main")
+    logger.info("loading mock from file")
+
+    val stringBody: String = File("./fixturesApiResponse.json").bufferedReader().use { it.readText() }
+    val fixtures = fromApiResponse(stringBody)
+    FixtureRepository.fixtures.apply {
+        clear()
+        addAll(fixtures ?: emptyList())
+    }
+    logger.info("dumped fixtures")
 }

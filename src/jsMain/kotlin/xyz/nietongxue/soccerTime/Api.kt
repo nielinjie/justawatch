@@ -16,5 +16,5 @@ val jsonClient = HttpClient {
 
 
 suspend fun getFixtures(): List<Fixture> {
-    return jsonClient.get("/fixtures").body()
+    return jsonClient.get("/api/fixtures").body()
 }

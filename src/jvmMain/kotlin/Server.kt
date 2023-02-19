@@ -33,12 +33,13 @@ object FixtureRepository {
 }
 
 fun main() {
-
+    val productMode: Boolean = System.getenv("productMode") != null
     val timer = Timer("apiCallerTimer")
     1.hours.inWholeMilliseconds
     timer.schedule(3.seconds.inWholeMilliseconds, 1.hours.inWholeMilliseconds) {
         runBlocking {
-            getting()
+
+                getting()
         }
     }
     val port = System.getenv("PORT")?.toInt() ?: 9000
@@ -69,7 +70,7 @@ fun main() {
             static("/") {
                 resources("")
             }
-            route("/fixtures") {
+            route("/api/fixtures") {
                 get {
                     call.respond(FixtureRepository.find())
                 }
