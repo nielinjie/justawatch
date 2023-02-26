@@ -12,7 +12,8 @@ import kotlin.time.toDuration
 
 class FixtureJsonTest {
 
-    private val jsonString = File("./fixturesApiResponse.json").bufferedReader().use { it.readText() }
+    private val jsonString = javaClass.getResource("/fixturesApiResponse.json")!!.readText()
+
     private val fixtureString = """
         {
       "fixture": {

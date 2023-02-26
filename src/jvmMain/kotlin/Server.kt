@@ -12,41 +12,19 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.coroutines.runBlocking
-import java.io.File
-import java.util.*
-import kotlin.concurrent.schedule
-import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.seconds
 
-object FixtureRepository {
-
-    val fixtures = mutableListOf<Fixture>(
-    )
-
-
-    fun find(): List<Fixture> {
-        return fixtures
-    }
-
-
-}
 
 fun main() {
     val productMode: Boolean = System.getenv("productMode") != null
-    val timer = Timer("apiCallerTimer")
-    1.hours.inWholeMilliseconds
-    timer.schedule(3.seconds.inWholeMilliseconds, 1.hours.inWholeMilliseconds) {
-        runBlocking {
 
-                getting()
-        }
-    }
     val port = System.getenv("PORT")?.toInt() ?: 9000
 
 //    FixtureRepository.fixtures.addAll(
 //        fromApiResponse(File("./fixturesApiResponse.json").bufferedReader().use { it.readText() }) ?: emptyList()
 //    )
+    TeamCaller.init()
+    FixtureCaller.init()
+    StandingCaller.init()
     embeddedServer(Netty, port) {
         install(ContentNegotiation) {
             json()
@@ -73,6 +51,31 @@ fun main() {
             route("/api/fixtures") {
                 get {
                     call.respond(FixtureRepository.find())
+                }
+            }
+            route("/api/fixtures/detailed") {
+                get {
+                    //call.respond(TeamRepository.findAll())
+                    val fixtures = FixtureRepository.find()
+                    val standings = StandingRepository.standings.associateBy { it.teamId }
+                    val teams = TeamRepository.teams.associateBy { it.id }
+                    val re:List<FixtureDetailed> = fixtures.map {
+                        FixtureDetailed(
+                            it,
+                            standings[it.teamAId]!! to standings[it.teamBId]!!,
+                            teams[it.teamAId]!! to teams[it.teamBId]!!)
+                    }
+                    call.respond(re)
+                }
+            }
+            route("/api/standings/{teamId?}") {
+                get{
+                    call.respond(StandingRepository.findById(call.parameters["teamId"]?.toInt()))
+                }
+            }
+            route("/api/status/{api?}"){
+                get {
+                    call.respond(ServiceStatusRepository.calling(call.parameters["api"]))
                 }
             }
 //            route(ShoppingListItem.path) {

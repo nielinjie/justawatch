@@ -1,5 +1,4 @@
 import csstype.*
-import emotion.css.css
 import emotion.react.css
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -10,18 +9,12 @@ import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.li
 import react.dom.html.ReactHTML.ul
 import xyz.nietongxue.soccerTime.*
-import xyz.nietongxue.soccerTime.util.findElementAt
 import xyz.nietongxue.soccerTime.util.throttle
 import kotlin.js.Date
-
 private val scope = MainScope()
 
 
-//val focusCss = css (
-//    jso {
-////        backgroundColor = NamedColor.grey
-//    }
-//)
+
 val ListComponent = FC<Props> {
     var nextFixtureItemDomElement: HTMLLIElement? = null
     var centralFixtureItemDomElement: HTMLLIElement? = null
@@ -30,6 +23,7 @@ val ListComponent = FC<Props> {
     fun scrollToCenter() {
         nextFixtureItemDomElement?.scrollIntoView(jso {
             block = "center"
+            behavior = "smooth"
         })
     }
 
@@ -42,14 +36,14 @@ val ListComponent = FC<Props> {
 
     }
 
-    var fixtures by useState(emptyList<Fixture>())
+    var fixtures by useState(emptyList<FixtureDetailed>())
     var first by useState<Int>(-1)
 
     useEffectOnce {
         scope.launch {
-            val f = getFixtures().sortedBy { it.date }
+            val f = getFixturesDetailed().sortedBy { it.fixture.date }
             first = f.indexOfFirst {
-                (it.date * 1000) > Date.now().toLong()
+                (it.fixture.date * 1000) > Date.now().toLong()
             }
             fixtures = f
         }
@@ -70,6 +64,7 @@ val ListComponent = FC<Props> {
             height = 90.vh
             overflowY = Auto.auto
             overflowX = Overflow.hidden
+            paddingInlineStart = 0.px
         }
         onScroll = {
             throttle(::focusCentral, 500).invoke()

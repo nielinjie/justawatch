@@ -12,6 +12,9 @@ plugins {
     application //to run JVM part
     kotlin("plugin.serialization") version "1.7.20-Beta"
 }
+fun kotlinw(target: String): String =
+    "org.jetbrains.kotlin-wrappers:kotlin-$target"
+
 
 group = "xyz.nietongxue"
 version = "1.0-SNAPSHOT"
@@ -85,7 +88,8 @@ kotlin {
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion")
-
+                implementation(kotlinw("mui"))
+                implementation(kotlinw("mui-icons"))
             }
         }
     }
