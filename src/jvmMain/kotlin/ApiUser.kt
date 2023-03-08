@@ -49,16 +49,3 @@ abstract class ApiUser(val apiId:String) {
 }
 
 
-suspend fun gettingFromMockFile() {
-    loggingConfiguration { DEFAULT_CONSOLE() }
-    val logger = logger("main")
-    logger.info("loading mock from file")
-
-    val stringBody: String = File("./fixturesApiResponse.json").bufferedReader().use { it.readText() }
-    val fixtures = fromApiResponse(stringBody)
-    FixtureRepository.fixtures.apply {
-        clear()
-        addAll(fixtures ?: emptyList())
-    }
-    logger.info("dumped fixtures")
-}

@@ -53,10 +53,10 @@ val TeamStandingCom = FC<TeamStandingProps> { props ->
             }
             span {
                 css {
-                    fontSize = 40.px
+                    fontSize = 12.px
                     fontFamily = FontFamily.monospace
                 }
-                +"${standing.rank}/${standing.score} "
+                +"@${standing.rank} ${standing.score}p "
                 FormCom {
                     form = standing.form
                 }
@@ -104,9 +104,9 @@ val Point = FC<PointProps> { props ->
                 marginRight = 5.px
                 display = Display.inlineBlock
                 backgroundColor = this@with.color
-                width = 20.px
-                height = 20.px
-                borderRadius = 10.px
+                width = 6.px
+                height = 6.px
+                borderRadius = 3.px
             }
         }
     }

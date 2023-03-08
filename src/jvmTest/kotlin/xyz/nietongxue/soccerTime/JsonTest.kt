@@ -1,5 +1,6 @@
 package xyz.nietongxue.soccerTime
 
+import io.kotest.core.spec.style.StringSpec
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.int
@@ -12,11 +13,10 @@ import kotlin.test.assertEquals
 @Serializable
 data class A(val a: Int, val b: Int)
 
-class JsonTest {
-    private val json1 = Json { ignoreUnknownKeys = true }
+class JsonTest:StringSpec( {
+     val json1 = Json { ignoreUnknownKeys = true }
 
-    @Test
-    fun test() {
+    "test" {
         val json = """
             {"a":1,"b":2,"c":3}
         """
@@ -24,8 +24,7 @@ class JsonTest {
         assertEquals(a, A(1, 2))
     }
 
-    @Test
-    fun testByPath() {
+     "testByPath" {
         val json = """
             {"a":{"a1":1}
             ,"b":2,"c":3}
@@ -35,4 +34,4 @@ class JsonTest {
         assertEquals(1, re?.jsonPrimitive?.int)
     }
 
-}
+})

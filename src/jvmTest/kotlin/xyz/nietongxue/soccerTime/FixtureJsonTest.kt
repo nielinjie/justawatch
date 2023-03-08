@@ -1,20 +1,26 @@
 package xyz.nietongxue.soccerTime
 
 
-import kotlinx.serialization.json.*
-import org.junit.Test
-import java.io.File
+import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.comparables.shouldBeEqualComparingTo
+import io.kotest.matchers.comparables.shouldNotBeEqualComparingTo
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.should
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldBeEqualIgnoringCase
+import kotlinx.serialization.json.Json
 import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
-class FixtureJsonTest {
+class FixtureJsonTest : StringSpec({
 
-    private val jsonString = javaClass.getResource("/fixturesApiResponse.json")!!.readText()
+    val jsonString = javaClass.getResource("/fixturesApiResponse.json")!!.readText()
 
-    private val fixtureString = """
+    val fixtureString = """
         {
       "fixture": {
         "id": 867947,
@@ -85,37 +91,33 @@ class FixtureJsonTest {
     }
     """.trimIndent()
 
-    @Test
-    fun test() {
+    "test" {
 
         val je = Json.parseToJsonElement(fixtureString)
         val fixture = oneFixture(je)
-        assertNotNull(fixture)
+        fixture.shouldNotBeNull()
     }
 
-    @Test
-    fun test2() {
+
+    " test2" {
         val fs = fromApiResponse(jsonString)
-        assertNotNull(fs)
-        assertEquals(380, fs.size)
+        fs.shouldNotBeNull().shouldHaveSize(380)
     }
 
 
 
-    @Test
-    fun time() {
+    "time" {
         val time = 1659785400L * 1000
         val now = Date().time
         val d = (now - time).toDuration(DurationUnit.MILLISECONDS)
         assert(d.inWholeDays >= 188)
     }
 
-    @Test
-    fun testTimePresentation() {
+    "testTimePresentation" {
 //        val duration = 188.toDuration(DurationUnit.MINUTES)
 //        assertEquals(toNaturelString(duration,Date().time), "3 hours ")
         val duration2 = 188.toDuration(DurationUnit.HOURS)
-        assertEquals(toNaturelString(duration2,Date().time), "7 days")
+        toNaturelString(duration2, Date().time).shouldBe("7 days")
     }
 
-}
+})

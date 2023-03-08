@@ -14,9 +14,6 @@ import kotlin.js.Date
  * next比较重要，毕竟现在这个是个"watch" 可以把时间单独显示。
  *
  */
-enum class UnderLine {
-    NEXT, WATCHED, HOT
-}
 
 enum class Direction {
     LEFT, RIGHT
@@ -33,10 +30,11 @@ val FixtureComponent = FC<FixtureProps> { props ->
     val durationOffset = durationOffset(fixtureDetailed.fixture.date * 1000, Date.now().toLong())
     with(fixtureDetailed) {
         div {
-
             onClick = { setExpanded(!expanded) }
             css {
+                fontSize = 16 .px
                 margin = 32.px
+                position = Position.relative
             }
             //抬头段
             if (props.underLine == UnderLine.NEXT) {
@@ -44,17 +42,16 @@ val FixtureComponent = FC<FixtureProps> { props ->
                     css {
                         fontFamily = FontFamily.monospace
                         color = NamedColor.green
-                        fontSize = (22 * 3).px
+                        fontSize = 22 .px
                         fontWeight = FontWeight.bold
                         textAlign = TextAlign.center
-                        marginBottom = (12 * 3).px
+                        marginBottom = 12 .px
                     }
                     +durationOffset.string
                 }
             }
             div {
                 css {
-                    fontSize = (16 * 3).px
                     fontWeight = FontWeight.bolder
                     height = 3.em
                     fontFamily = FontFamily.sansSerif

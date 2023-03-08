@@ -12,19 +12,17 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.kodein.di.instance
 
 
 fun main() {
     val productMode: Boolean = System.getenv("productMode") != null
 
     val port = System.getenv("PORT")?.toInt() ?: 9000
+    val callers by di.instance<Set<ApiCaller>>()
+    val app by di.instance<App>()
 
-//    FixtureRepository.fixtures.addAll(
-//        fromApiResponse(File("./fixturesApiResponse.json").bufferedReader().use { it.readText() }) ?: emptyList()
-//    )
-    TeamCaller.init()
-    FixtureCaller.init()
-    StandingCaller.init()
+    callers.forEach {it.init()}
     embeddedServer(Netty, port) {
         install(ContentNegotiation) {
             json()
@@ -50,15 +48,15 @@ fun main() {
             }
             route("/api/fixtures") {
                 get {
-                    call.respond(FixtureRepository.find())
+                    call.respond(app.fixtureRepository.find())
                 }
             }
             route("/api/fixtures/detailed") {
                 get {
                     //call.respond(TeamRepository.findAll())
-                    val fixtures = FixtureRepository.find()
-                    val standings = StandingRepository.standings.associateBy { it.teamId }
-                    val teams = TeamRepository.teams.associateBy { it.id }
+                    val fixtures = app.fixtureRepository.find()
+                    val standings =app. standingRepository.standings.associateBy { it.teamId }
+                    val teams = app.teamRepository.teams.associateBy { it.id }
                     val re:List<FixtureDetailed> = fixtures.map {
                         FixtureDetailed(
                             it,
@@ -70,7 +68,7 @@ fun main() {
             }
             route("/api/standings/{teamId?}") {
                 get{
-                    call.respond(StandingRepository.findById(call.parameters["teamId"]?.toInt()))
+                    call.respond(app.standingRepository.findById(call.parameters["teamId"]?.toInt()))
                 }
             }
             route("/api/status/{api?}"){

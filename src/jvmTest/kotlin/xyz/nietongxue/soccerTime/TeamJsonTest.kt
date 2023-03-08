@@ -1,12 +1,12 @@
 package xyz.nietongxue.soccerTime
 
-import org.junit.Test
+import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.collections.shouldHaveSize
 
-class TeamJsonTest {
+class TeamJsonTest: StringSpec({
     val teamJson = javaClass.getResource("/teamInfoApiResponse.json")!!.readText()
-    @Test
-    fun parse() {
+    "parse" {
         val re = fromTeamResponse(teamJson)
-        assert(re.size == 20)
+        re.shouldHaveSize(20)
     }
-}
+})

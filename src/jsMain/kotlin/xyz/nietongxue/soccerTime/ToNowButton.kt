@@ -14,9 +14,10 @@ external interface ToNowProps : Props {
 }
 
 val ToNowButton = FC<ToNowProps> { props ->
-    val radius = 80
+    val radius = 24
     button {
         css {
+            padding = 0.px
             position = Position.absolute
             bottom = 10.pct
             right = 10.pct
@@ -24,7 +25,7 @@ val ToNowButton = FC<ToNowProps> { props ->
             height = radius*2.px
             borderRadius = radius.px
             zIndex = integer(1000)
-            borderWidth = 10.px
+            borderWidth = 3.px
             fontSize =radius*2*0.7.px
             fontWeight = FontWeight.bolder
             fontFamily = FontFamily.monospace
@@ -33,6 +34,8 @@ val ToNowButton = FC<ToNowProps> { props ->
 
         }
         onClick = { props.onClick() }
-        + ">"
+        PlayArrow{
+
+        }
     }
 }

@@ -20,7 +20,7 @@ val StatusComponent = FC<StatusProps> { props ->
                 fontSize = 80.pct
                 textAlign = TextAlign.center
             }
-            +if (durationOffset.after) " ${durationOffset.string} "
+            +if (durationOffset.after && durationOffset.duration.inWholeDays <= 7) " ${durationOffset.string} "
             else
                 (fixture.result ?: (fixture.status))
         }

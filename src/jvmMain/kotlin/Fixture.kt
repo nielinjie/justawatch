@@ -7,7 +7,7 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
-object FixtureRepository {
+class FixtureRepository {
 
     val fixtures = mutableListOf<Fixture>(
     )
@@ -58,7 +58,7 @@ fun fromApiResponse(responseString: String): List<Fixture>? {
 }
 
 
-object FixtureCaller : ApiCaller() {
+class FixtureCaller (val app:App): ApiCaller() {
     override val apiId: String = "fixtures"
     override val scheduler: Scheduler = Scheduler.default
     override val user = object : ApiUser("fixtures") {
@@ -70,7 +70,7 @@ object FixtureCaller : ApiCaller() {
 
         override fun withResponse(stringBody: String) {
             val fixtures = fromApiResponse(stringBody)
-            FixtureRepository.fixtures.apply {
+            app.fixtureRepository.fixtures.apply {
                 clear()
                 addAll(fixtures ?: emptyList())
             }

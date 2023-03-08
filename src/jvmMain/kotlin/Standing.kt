@@ -1,16 +1,11 @@
 package xyz.nietongxue.soccerTime
 
-import kotlinx.datetime.Instant
-import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
-
-object StandingRepository {
+class StandingRepository {
     val standings = mutableListOf<Standing>()
     fun findById(id: Int?) = id?.let { idIt -> standings.find { it.teamId == idIt } } ?: standings
 }
 
-object StandingCaller : ApiCaller() {
+class StandingCaller(val app:App) : ApiCaller() {
     override val apiId: String = "standings"
     override val scheduler: Scheduler = Scheduler.default
     override val user: ApiUser = object : ApiUser(apiId) {
@@ -21,7 +16,7 @@ object StandingCaller : ApiCaller() {
 
         override fun withResponse(stringBody: String) {
             val standings = fromStandingResponse(stringBody)
-            StandingRepository.standings.apply {
+            app.standingRepository.standings.apply {
                 clear()
                 addAll(standings)
             }

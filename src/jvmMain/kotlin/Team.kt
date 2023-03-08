@@ -1,13 +1,13 @@
 package xyz.nietongxue.soccerTime
 
-object TeamRepository {
+class TeamRepository {
     val teams = mutableListOf<Team>()
     fun findById(id: Int) = teams.find { it.id == id }
 }
 
 
 
-object TeamCaller : ApiCaller() {
+class TeamCaller(val app:App) : ApiCaller() {
     override val apiId: String = "teams"
     override val scheduler: Scheduler = Scheduler.longTerm
     override val user: ApiUser = object : ApiUser(apiId) {
@@ -19,7 +19,7 @@ object TeamCaller : ApiCaller() {
 
         override fun withResponse(stringBody: String) {
             val teams = fromTeamResponse(stringBody)
-            TeamRepository.teams.apply {
+            app.teamRepository.teams.apply {
                 clear()
                 addAll(teams)
             }
