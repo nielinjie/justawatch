@@ -4,7 +4,6 @@ import org.kodein.di.*
 
 val di = DI{
     bindSingleton<App> { defaultApp}
-    bindSingleton<TaggerFiltering> { TaggerFiltering(instance()) }
     bindSet<ApiCaller> {
         add {singleton { FixtureCaller(instance()) }}
         add {singleton { StandingCaller(instance()) }}

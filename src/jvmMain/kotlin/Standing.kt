@@ -2,7 +2,7 @@ package xyz.nietongxue.soccerTime
 
 class StandingRepository {
     val standings = mutableListOf<Standing>()
-    fun findById(id: Int?) = id?.let { idIt -> standings.find { it.teamId == idIt } } ?: standings
+    fun findById(id: Int) =  standings.find { it.teamId == id }
 }
 
 class StandingCaller(val app:App) : ApiCaller() {

@@ -1,0 +1,15 @@
+{
+  "background_color": "purple",
+  "description": "Just a watch of soccer",
+  "display": "fullscreen",
+  "icons": [
+    {
+      "src": "icon/jaw-icon.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    }
+  ],
+  "name": "Just a watch",
+  "short_name": "JustAWatch",
+  "start_url": "/index.html"
+}

@@ -22,7 +22,7 @@ fun main() {
     val callers by di.instance<Set<ApiCaller>>()
     val app by di.instance<App>()
 
-    callers.forEach {it.init()}
+    callers.forEach { it.init() }
     embeddedServer(Netty, port) {
         install(ContentNegotiation) {
             json()
@@ -55,23 +55,28 @@ fun main() {
                 get {
                     //call.respond(TeamRepository.findAll())
                     val fixtures = app.fixtureRepository.find()
-                    val standings =app. standingRepository.standings.associateBy { it.teamId }
+                    val standings = app.standingRepository.standings.associateBy { it.teamId }
                     val teams = app.teamRepository.teams.associateBy { it.id }
-                    val re:List<FixtureDetailed> = fixtures.map {
+                    val re: List<FixtureDetailed> = fixtures.map {
                         FixtureDetailed(
                             it,
                             standings[it.teamAId]!! to standings[it.teamBId]!!,
-                            teams[it.teamAId]!! to teams[it.teamBId]!!)
+                            teams[it.teamAId]!! to teams[it.teamBId]!!
+                        )
                     }
                     call.respond(re)
                 }
             }
             route("/api/standings/{teamId?}") {
-                get{
-                    call.respond(app.standingRepository.findById(call.parameters["teamId"]?.toInt()))
+                get {
+                    call.respond(
+
+                        call.parameters["teamId"]?.let {
+                            app.standingRepository.findById(it.toInt())
+                        } ?: emptyList<Standing>())
                 }
             }
-            route("/api/status/{api?}"){
+            route("/api/status/{api?}") {
                 get {
                     call.respond(ServiceStatusRepository.calling(call.parameters["api"]))
                 }
