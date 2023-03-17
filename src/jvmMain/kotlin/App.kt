@@ -15,3 +15,4 @@ val defaultApp = object : App() {
     override val sessionRepository: SessionRepository = SessionRepository()
     override val teamRepository: TeamRepository = TeamRepository()
 }
+

@@ -4,7 +4,6 @@ import csstype.*
 import emotion.react.css
 import react.FC
 import react.Props
-import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.span
 
@@ -56,7 +55,7 @@ val TeamStandingCom = FC<TeamStandingProps> { props ->
                     fontSize = 12.px
                     fontFamily = FontFamily.monospace
                 }
-                +"@${standing.rank} ${standing.score}p "
+                +"@${standing.rank} ${standing.points}p "
                 FormCom {
                     form = standing.form
                 }

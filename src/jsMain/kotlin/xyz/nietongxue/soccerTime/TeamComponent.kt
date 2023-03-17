@@ -32,8 +32,8 @@ val TeamComponent = FC<LogoProps> { props ->
             css {
                 width = 2.em
                 height = 2.em
-                marginLeft = 2.em
-                marginRight = 2.em
+                marginLeft = 1.em
+                marginRight = 1.em
             }
             src = team.logo
         }

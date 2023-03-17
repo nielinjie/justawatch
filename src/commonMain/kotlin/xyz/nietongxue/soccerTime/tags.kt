@@ -36,28 +36,36 @@ data class League(val league: String) : Tagger {
 
 
 @Serializable
-data class NamedTeam(val names: List<String>) : Tagger {
-    override val description: String = "for teams - $names"
+data class PinedTeam(val name: String) : Tagger {
+    override val description: String = "pined team - $name"
     override val objectType = ObjectType.TEAM
 }
 
 //比如欧冠区争夺
 @Serializable
-data class PositionInStanding(val league: String, val position: Int) : Tagger {
-    override val description: String
-        get() = TODO("Not yet implemented")
+data class Rank(val league: String, val rank: Int) : Tagger {
+    override val description: String ="position - $rank"
     override val objectType = ObjectType.TEAM
 }
 
 
 //比如榜首争霸赛
 @Serializable
-data class PositionDiff(val league: String, val positionDiff: Int) : Tagger {
-    override val description: String
-        get() = TODO("Not yet implemented")
+data class RankDiff(val league: String, val rankDiff: Int) : Tagger {
+    override val description: String = "rankDiff - $rankDiff"
+    override val objectType = ObjectType.FIXTURE
+}
+@Serializable
+data class PointsDiff(val league: String, val pointDiff: Int=3) : Tagger {
+    override val description: String = "pointsDiff - $pointDiff"
     override val objectType = ObjectType.FIXTURE
 }
 
+@Serializable
+data class PointsBelowFromRank(val league: String, val pointsDiff: Int, val rank:Int) : Tagger {
+    override val objectType: ObjectType = ObjectType.TEAM
+    override val description: String = "pointsDiffFromRank - $pointsDiff points from $rank"
+}
 
 //比如欧冠淘汰赛
 //比如足总杯半决赛

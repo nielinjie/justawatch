@@ -19,8 +19,8 @@ fun main() {
     val productMode: Boolean = System.getenv("productMode") != null
 
     val port = System.getenv("PORT")?.toInt() ?: 9000
-    val callers by di.instance<Set<ApiCaller>>()
-    val app by di.instance<App>()
+    val callers by diMe.instance<Set<ApiCaller>>()
+    val app by diMe.instance<App>()
 
     callers.forEach { it.init() }
     embeddedServer(Netty, port) {
@@ -53,15 +53,21 @@ fun main() {
             }
             route("/api/fixtures/detailed") {
                 get {
-                    //call.respond(TeamRepository.findAll())
+                    //TODO use session id from client
+                    //https://ktor.io/docs/sessions.html#custom_storage
+                    val sessionId = "_me"
+                    val session = app.sessionRepository.get(sessionId) ?: error("no session find")
                     val fixtures = app.fixtureRepository.find()
                     val standings = app.standingRepository.standings.associateBy { it.teamId }
                     val teams = app.teamRepository.teams.associateBy { it.id }
-                    val re: List<FixtureDetailed> = fixtures.map {
+                    val tagging = Tagging(session, app)
+                    val fixtureWithTags = tagging.tagging(fixtures)
+                    val re: List<FixtureDetailed> = fixtureWithTags.map {
                         FixtureDetailed(
-                            it,
-                            standings[it.teamAId]!! to standings[it.teamBId]!!,
-                            teams[it.teamAId]!! to teams[it.teamBId]!!
+                            it.fixture,
+                            standings[it.fixture.teamAId]!! to standings[it.fixture.teamBId]!!,
+                            teams[it.fixture.teamAId]!! to teams[it.fixture.teamBId]!!,
+                            it.tags + it.aTeamTags + it.bTeamTags
                         )
                     }
                     call.respond(re)

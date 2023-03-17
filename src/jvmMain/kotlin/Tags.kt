@@ -1,5 +1,8 @@
 package xyz.nietongxue.soccerTime
 
+import kotlin.math.abs
+
+
 class Tagging(private val session: Session, val app: App) {
 
     private val taggers = session.customize.taggers
@@ -27,40 +30,100 @@ class Tagging(private val session: Session, val app: App) {
         }
     }
 
+    private fun normalizeRank(rank: Int): Int {
+        assert(rank != 0)
+        return if (rank >= 0) rank
+        //TODO, team的数量需要league限制
+        else app.teamRepository.teams.size + rank + 1
+    }
+
+    private fun getPointsOfRank(rank: Int): Int {
+        val nr = normalizeRank(rank)
+        val standing =
+            app.standingRepository.standings.find { it.rank == nr } ?: error("not find standing for rank $nr")
+        return standing.points
+    }
+
     private fun tagForTeam(team: Team, tagger: Tagger): Tag? {
         assert(tagger.objectType == ObjectType.TEAM)
         return when (tagger) {
-            is NamedTeam -> {
-                val names = tagger.names
-                if (team.name in names || team.code in names) Tag("named") else null
+            is PinedTeam -> {
+                val name = tagger.name
+                if (team.name == name || team.code == name) Tag(
+                    "${team.code} - pined team",
+                    mapOf("name" to team.name)
+                ) else null
             }
 
-            is PositionInStanding -> {
-                val (league, position) = tagger
-                if (position > 0) {
-                    val standing = app.standingRepository.findById(team.id) ?: error("no standing find")
-                    if (standing.rank <= position) {
-                        Tag("position - ${standing.rank}")
+            is Rank -> {
+                val (league, rank) = tagger
+                assert(league == onlySupportedLeague) { "not supported league" }
+                val standing = app.standingRepository.findById(team.id) ?: error("no standing find")
+
+                if (rank > 0) {
+                    if (standing.rank <= rank) {
+                        Tag("${team.code} - @${standing.rank}")
                     } else null
-                } else if (position < 0) {
-                    val pPosition = app.teamRepository.teams.size - position + 1
-                    val standing = app.standingRepository.findById(team.id) ?: error("no standing find")
+                } else if (rank < 0) {
+                    val pPosition = normalizeRank(rank)
                     if (standing.rank >= pPosition) {
-                        Tag("position - ${standing.rank}")
+                        Tag("${team.code} - @${standing.rank}")
                     } else null
-                } else error("position can not be 0")
+                } else error("rank can not be 0")
             }
 
-            else -> null
+            is PointsBelowFromRank -> {
+                val (league, points, rank) = tagger
+                assert(league == onlySupportedLeague) { "not supported league" }
+                assert(rank != 0)
+                val nr = normalizeRank(rank)
+                val pointsOfRank = getPointsOfRank(rank)
+                val thisPoints = (app.standingRepository.findById(team.id) ?: error("no standing find")).points
+                if (thisPoints < pointsOfRank && thisPoints + points >= pointsOfRank) {
+                    return Tag("${team.code} - p${pointsOfRank-thisPoints} below @${nr}")
+                } else
+                    return null
+
+            }
+
+            else -> error("not supported tagger")
         }
     }
 
     private fun tagForFixture(fixture: Fixture, tagger: Tagger, teamWithTags: Map<Int, List<Tag>>): Tag? {
         assert(tagger.objectType == ObjectType.FIXTURE)
         return when (tagger) {
-            is League ->{
-                Tag("league")
+            is RankDiff -> {
+                val (league, rankDiff) = tagger
+                assert(league == onlySupportedLeague) { "not supported league" }
+                val aStanding = app.standingRepository.findById(fixture.teamAId)
+                    ?: error("no standing find for team - $fixture.teamAId")
+                val bStanding = app.standingRepository.findById(fixture.teamBId)
+                    ?: error("no standing find for team - $fixture.teamBId")
+                val diff = abs(aStanding.rank - bStanding.rank)
+                if (diff <= abs(rankDiff)) {
+                    Tag("rank diff - $diff")
+                } else {
+                    null
+                }
             }
+
+            is PointsDiff -> {
+                val (league, pointsDiff) = tagger
+                assert(league == onlySupportedLeague) { "not supported league" }
+                val aStanding = app.standingRepository.findById(fixture.teamAId)
+                    ?: error("no standing find for team - $fixture.teamAId")
+                val bStanding = app.standingRepository.findById(fixture.teamBId)
+                    ?: error("no standing find for team - $fixture.teamBId")
+                val diff = abs(aStanding.points - bStanding.points)
+                if (diff <= abs(pointsDiff)) {
+                    Tag("points diff - $diff")
+                } else {
+                    null
+                }
+            }
+
+
             else -> error("not supported tagger")
         }
     }

@@ -33,7 +33,8 @@ val FixtureComponent = FC<FixtureProps> { props ->
             onClick = { setExpanded(!expanded) }
             css {
                 fontSize = 16 .px
-                margin = 32.px
+                margin = 20.px
+                marginTop = 32.px
                 position = Position.relative
             }
             //抬头段
@@ -71,7 +72,9 @@ val FixtureComponent = FC<FixtureProps> { props ->
                     direction = Direction.LEFT
                 }
 
-
+                TagsCom{
+                    tags = this@with.tags
+                }
                 TeamComponent {
                     team = teams.second
                     direction = Direction.RIGHT
@@ -82,6 +85,9 @@ val FixtureComponent = FC<FixtureProps> { props ->
                 //状态段
                 StandingComponent {
                     this.fixtureDetailed = fixtureDetailed
+                }
+                ExpandTags {
+                    this.tags = this@with.tags
                 }
             }
             //结果段

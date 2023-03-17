@@ -10,3 +10,4 @@ val di = DI{
         add {singleton { TeamCaller(instance()) }}
     }
 }
+

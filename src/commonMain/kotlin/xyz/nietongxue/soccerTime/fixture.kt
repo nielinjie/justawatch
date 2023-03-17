@@ -17,7 +17,7 @@ data class Fixture(
 data class Team(val id: Int, val name: String, val code: String, val logo: String)
 
 @Serializable
-data class Standing(val teamId:Int,val rank: Int, val score: Int, val form: Form)
+data class Standing(val teamId:Int, val rank: Int, val points: Int, val form: Form)
 
 @Serializable
 data class Form(val formChars: List<String>) {
@@ -30,4 +30,4 @@ data class Form(val formChars: List<String>) {
 
 
 @Serializable
-data class FixtureDetailed(val fixture: Fixture, val standings: Pair<Standing,Standing>,val teams:Pair<Team,Team>)
+data class FixtureDetailed(val fixture: Fixture, val standings: Pair<Standing,Standing>,val teams:Pair<Team,Team>,val tags: List<Tag>)
