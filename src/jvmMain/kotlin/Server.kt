@@ -2,12 +2,16 @@ package xyz.nietongxue.soccerTime
 
 
 import io.ktor.http.*
+import io.ktor.http.content.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.http.content.*
 import io.ktor.server.netty.*
+import io.ktor.server.plugins.cachingheaders.*
 import io.ktor.server.plugins.compression.*
+import io.ktor.server.plugins.compression.Compression
+import io.ktor.server.plugins.conditionalheaders.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.response.*
@@ -33,11 +37,23 @@ fun main() {
             allowMethod(HttpMethod.Delete)
             anyHost()
         }
+        //TODO add cache control
+        //https://ktor.io/docs/conditional-headers.html#configure
+        install(ConditionalHeaders)
+        //static content 自动version
+        install(CachingHeaders) {
+            options { call, content ->
+                CachingOptions(CacheControl.NoCache(CacheControl.Visibility.Public))
+            }
+        }
+
+
         install(Compression) {
             gzip()
         }
         routing {
             get("/") {
+                //这个是支持index.html省略的。
                 call.respondText(
                     this::class.java.classLoader.getResource("index.html")!!.readText(),
                     ContentType.Text.Html

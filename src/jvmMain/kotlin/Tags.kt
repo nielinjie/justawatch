@@ -1,5 +1,8 @@
 package xyz.nietongxue.soccerTime
 
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlin.math.abs
 
 
@@ -51,7 +54,8 @@ class Tagging(private val session: Session, val app: App) {
                 val name = tagger.name
                 if (team.name == name || team.code == name) Tag(
                     "${team.code} - pined team",
-                    mapOf("name" to team.name)
+                    power = Power.HIGH,
+                    data = mapOf("name" to team.name)
                 ) else null
             }
 
@@ -80,7 +84,7 @@ class Tagging(private val session: Session, val app: App) {
                 val pointsOfRank = getPointsOfRank(rank)
                 val thisPoints = (app.standingRepository.findById(team.id) ?: error("no standing find")).points
                 if (thisPoints < pointsOfRank && thisPoints + points >= pointsOfRank) {
-                    return Tag("${team.code} - p${pointsOfRank-thisPoints} below @${nr}")
+                    return Tag("${team.code} - p${pointsOfRank - thisPoints} below @${nr}")
                 } else
                     return null
 
@@ -117,12 +121,20 @@ class Tagging(private val session: Session, val app: App) {
                     ?: error("no standing find for team - $fixture.teamBId")
                 val diff = abs(aStanding.points - bStanding.points)
                 if (diff <= abs(pointsDiff)) {
-                    Tag("points diff - $diff")
+                    Tag("points diff - $diff", power = Power.LOW)
                 } else {
                     null
                 }
             }
 
+            is AtNight -> {
+                val (night) = tagger
+                val fixtureTime =
+                    Instant.fromEpochMilliseconds(fixture.date).toLocalDateTime(TimeZone.currentSystemDefault()).time
+                return if (night.timeIn(fixtureTime))
+                    Tag("too late - $fixtureTime", power = Power.NEGATIVE)
+                else null
+            }
 
             else -> error("not supported tagger")
         }

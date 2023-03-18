@@ -1,5 +1,6 @@
 package xyz.nietongxue.soccerTime
 
+import kotlinx.datetime.LocalTime
 import org.kodein.di.*
 
 val diMe = DI {
@@ -28,6 +29,7 @@ val defaultAppMe = object : App() {
                         PointsDiff(onlySupportedLeague),
                         PointsBelowFromRank(onlySupportedLeague, 3, 4), //离欧冠区3分
                         PointsBelowFromRank(onlySupportedLeague, 3, -4), //离摆脱降级区3分
+                        AtNight(Night(LocalTime(23,0,0), LocalTime(18,0,0)))
                     )
                 )
             )

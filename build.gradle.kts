@@ -73,7 +73,8 @@ kotlin {
                 implementation("org.litote.kmongo:kmongo-coroutine-serialization:$kmongoVersion")
                 implementation("io.klogging:klogging-jvm:0.4.12")
                 implementation("org.kodein.di:kodein-di:7.18.0")
-
+                implementation("io.ktor:ktor-server-conditional-headers:$ktorVersion")
+                implementation("io.ktor:ktor-server-caching-headers:$ktorVersion")
 //                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
             }
         }

@@ -1,5 +1,6 @@
 package xyz.nietongxue.soccerTime
 
+import kotlinx.datetime.LocalTime
 import kotlinx.serialization.Serializable
 
 enum class ObjectType {
@@ -12,11 +13,17 @@ interface Tagger {
 //    val type: String
 }
 
+enum class Power {
+    HIGH, MEDIUM, LOW, NEGATIVE
+}
 
 @Serializable
-data class Tag(val text: String, val id: String, val data: Map<String, String>) {
-    constructor(id: String) : this(id, id, emptyMap())
-    constructor(id: String, data: Map<String, String>) : this(id, id, data)
+data class Tag(
+    val text: String,
+    val id: String = text,
+    val power: Power = Power.MEDIUM,
+    val data: Map<String, String> = emptyMap()
+) {
 }
 
 @Serializable
@@ -44,10 +51,30 @@ data class PinedTeam(val name: String) : Tagger {
 //比如欧冠区争夺
 @Serializable
 data class Rank(val league: String, val rank: Int) : Tagger {
-    override val description: String ="position - $rank"
+    override val description: String = "position - $rank"
     override val objectType = ObjectType.TEAM
 }
+@Serializable
+data class Night(val start: LocalTime, val end: LocalTime) {
+    init {
+        require(start <= LocalTime(23, 59, 59) || end > LocalTime(0, 0, 0)) {
+            "start must be before middle night and end must be after middle night"
+        }
+    }
+    fun timeIn(time: LocalTime): Boolean {
+        return when {
+            time <= LocalTime(23, 59, 59) -> start <= time
+            else -> time <= end
+        }
+    }
+}
 
+@Serializable
+data class AtNight(val night: Night):Tagger{
+
+    override val description = "too late - $night"
+    override val objectType = ObjectType.FIXTURE
+}
 
 //比如榜首争霸赛
 @Serializable
@@ -55,14 +82,15 @@ data class RankDiff(val league: String, val rankDiff: Int) : Tagger {
     override val description: String = "rankDiff - $rankDiff"
     override val objectType = ObjectType.FIXTURE
 }
+
 @Serializable
-data class PointsDiff(val league: String, val pointDiff: Int=3) : Tagger {
+data class PointsDiff(val league: String, val pointDiff: Int = 3) : Tagger {
     override val description: String = "pointsDiff - $pointDiff"
     override val objectType = ObjectType.FIXTURE
 }
 
 @Serializable
-data class PointsBelowFromRank(val league: String, val pointsDiff: Int, val rank:Int) : Tagger {
+data class PointsBelowFromRank(val league: String, val pointsDiff: Int, val rank: Int) : Tagger {
     override val objectType: ObjectType = ObjectType.TEAM
     override val description: String = "pointsDiffFromRank - $pointsDiff points from $rank"
 }
