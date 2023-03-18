@@ -54,6 +54,7 @@ data class Rank(val league: String, val rank: Int) : Tagger {
     override val description: String = "position - $rank"
     override val objectType = ObjectType.TEAM
 }
+
 @Serializable
 data class Night(val start: LocalTime, val end: LocalTime) {
     init {
@@ -61,16 +62,16 @@ data class Night(val start: LocalTime, val end: LocalTime) {
             "start must be before middle night and end must be after middle night"
         }
     }
+
     fun timeIn(time: LocalTime): Boolean {
-        return when {
-            time <= LocalTime(23, 59, 59) -> start <= time
-            else -> time <= end
-        }
+        if (time == LocalTime(0, 0, 0)) return true
+        return (start <= time && time <= LocalTime(23, 59, 59)) ||
+                (LocalTime(0, 0, 0) <= time && time <= end)
     }
 }
 
 @Serializable
-data class AtNight(val night: Night):Tagger{
+data class AtNight(val night: Night) : Tagger {
 
     override val description = "too late - $night"
     override val objectType = ObjectType.FIXTURE

@@ -7,6 +7,5 @@ import react.Props
 
 val App = FC<Props> {
     ListComponent {
-
     }
 }

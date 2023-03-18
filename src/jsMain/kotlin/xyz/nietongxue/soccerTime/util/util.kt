@@ -25,3 +25,13 @@ fun findElementAt(className: String): HTMLLIElement {
     val items = document.getElementsByClassName("fixture-item").asList()
     return items.minBy { abs(it.getBoundingClientRect().top - at) } as HTMLLIElement
 }
+
+
+@JsNonModule
+@JsModule("color")
+external class ColorU(value:String)
+{
+    fun lighten(fl: Float): ColorU
+    fun string(): String
+
+}

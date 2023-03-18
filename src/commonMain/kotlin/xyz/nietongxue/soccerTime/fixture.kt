@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Fixture(
     val id: Int,
+    //EpochSeconds, not ms!!
     val date: Long,
     val teamAId: Int,
     val teamBId: Int,

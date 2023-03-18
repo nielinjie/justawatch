@@ -28,6 +28,7 @@ repositories {
 
 }
 
+
 kotlin {
     jvm {
         withJava()
@@ -97,7 +98,7 @@ kotlin {
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion")
-                implementation(npm("color","^4.2.3",true))
+                implementation(npm("color","^4.2.3"))
                 implementation(kotlinw("mui"))
                 implementation(kotlinw("mui-icons"))
             }

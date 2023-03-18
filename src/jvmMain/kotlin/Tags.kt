@@ -1,7 +1,6 @@
 package xyz.nietongxue.soccerTime
 
-import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
+import kotlinx.datetime.*
 import kotlinx.datetime.toLocalDateTime
 import kotlin.math.abs
 
@@ -129,10 +128,11 @@ class Tagging(private val session: Session, val app: App) {
 
             is AtNight -> {
                 val (night) = tagger
-                val fixtureTime =
-                    Instant.fromEpochMilliseconds(fixture.date).toLocalDateTime(TimeZone.currentSystemDefault()).time
-                return if (night.timeIn(fixtureTime))
-                    Tag("too late - $fixtureTime", power = Power.NEGATIVE)
+                val fixtureTimeIn =
+                    Instant.fromEpochSeconds(fixture.date)
+                val local = fixtureTimeIn.toLocalDateTime(TimeZone.currentSystemDefault())
+                return if (night.timeIn(local.time))
+                    Tag("bad time - ${local.time}", power = Power.NEGATIVE)
                 else null
             }
 
