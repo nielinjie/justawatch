@@ -30,7 +30,7 @@ val TagsCom = FC<TagsProps> {
 }
 
 val TagCom = FC<TagProps> {
-    val blueColor = ColorU("#4682B4") //SteelBlue
+    val blueColor = ColorU("#3874CB") //color of mui primary
     val lb = blueColor.lighten(0.4f)
     val llb = blueColor.lighten(0.7f)
     val none = ColorU("#FFFFFF")

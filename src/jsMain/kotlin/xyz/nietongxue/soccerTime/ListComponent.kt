@@ -3,14 +3,13 @@ import emotion.react.css
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.js.jso
-import kotlinx.js.timers.setInterval
+import mui.icons.material.More
 import org.w3c.dom.HTMLLIElement
 import react.*
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.li
 import react.dom.html.ReactHTML.ul
 import xyz.nietongxue.soccerTime.*
-import xyz.nietongxue.soccerTime.util.throttle
 import kotlin.js.Date
 
 private val scope = MainScope()
@@ -30,17 +29,21 @@ val ListComponent = FC<Props> {
         })
 
     }
+
     fun scrollAndRefresh() {
-        scrollToCenter()
         time = Date.now().toLong()
-        first = fixtures.indexOfFirst {
-            (it.fixture.date * 1000) > time
-        }
+//        first = fixtures.indexOfFirst {
+//            (it.fixture.date * 1000) > time
+//        }
+////        setTimeout({
+//            scrollToCenter()
+//        })
+
     }
 
 
 
-    useEffectOnce {
+    useEffect(time) {
         scope.launch {
             val f = getFixturesDetailed().sortedBy { it.fixture.date }
             first = f.indexOfFirst {
@@ -55,14 +58,26 @@ val ListComponent = FC<Props> {
             top = 50.pct
         }
     }
-    ToNowButton {
-        onClick = ::scrollAndRefresh
+    div {
+        css {
+            position = Position.absolute
+            bottom = 2.pct
+            right = 5.pct
+        }
+        MoreButton {
+            onClick = {
+                console.log("clicked")
+            }
+        }
+        ToNowButton {
+            onClick = ::scrollAndRefresh
+        }
     }
 
     ul {
         css {
             listStyleType = None.none
-            height = 90.vh
+            height = 98.vh
             overflowY = Auto.auto
             overflowX = Overflow.hidden
             paddingInlineStart = 0.px
