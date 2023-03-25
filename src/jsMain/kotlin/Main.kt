@@ -1,6 +1,6 @@
-import kotlinx.browser.document
 import react.create
 import react.dom.client.createRoot
+import web.dom.document
 import xyz.nietongxue.soccerTime.App
 
 fun main() {

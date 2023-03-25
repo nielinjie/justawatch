@@ -13,11 +13,11 @@ interface Filter {
 }
 
 @Serializable
-
 object NegativeTagsFilter: Filter {
     override val description: String
         = "Collapse any NEGATIVE tag"
 }
+@Serializable
 object NoTagFilter: Filter {
     override val description: String = "Collapse any without tag"
 }

@@ -1,15 +1,16 @@
 import csstype.*
 import emotion.react.css
+import js.core.jso
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import kotlinx.js.jso
-import kotlinx.js.timers.setTimeout
-import mui.icons.material.More
-import org.w3c.dom.HTMLLIElement
 import react.*
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.li
 import react.dom.html.ReactHTML.ul
+import web.html.HTMLLIElement
+import web.scroll.ScrollBehavior
+import web.scroll.ScrollLogicalPosition
+import web.timers.setTimeout
 import xyz.nietongxue.soccerTime.*
 import kotlin.js.Date
 
@@ -18,7 +19,6 @@ private val scope = MainScope()
 
 val ListComponent = FC<Props> {
     var nextFixtureItemDomElement: HTMLLIElement? = null
-    var centralFixtureItemDomElement: HTMLLIElement? = null
 
     var fixtures by useState(emptyList<FixtureDetailed>())
     var first by useState<Int>(-1)
@@ -27,8 +27,8 @@ val ListComponent = FC<Props> {
         console.log("scrolling")
         console.log(nextFixtureItemDomElement)
         nextFixtureItemDomElement?.scrollIntoView(jso {
-            block = "center"
-            behavior = "smooth"
+            block = ScrollLogicalPosition.center
+            behavior = ScrollBehavior.smooth
         })
 
     }
