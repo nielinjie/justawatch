@@ -3,6 +3,7 @@ import emotion.react.css
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.js.jso
+import kotlinx.js.timers.setTimeout
 import mui.icons.material.More
 import org.w3c.dom.HTMLLIElement
 import react.*
@@ -23,6 +24,8 @@ val ListComponent = FC<Props> {
     var first by useState<Int>(-1)
     var time by useState(Date.now().toLong())
     fun scrollToCenter() {
+        console.log("scrolling")
+        console.log(nextFixtureItemDomElement)
         nextFixtureItemDomElement?.scrollIntoView(jso {
             block = "center"
             behavior = "smooth"
@@ -32,12 +35,13 @@ val ListComponent = FC<Props> {
 
     fun scrollAndRefresh() {
         time = Date.now().toLong()
+
 //        first = fixtures.indexOfFirst {
 //            (it.fixture.date * 1000) > time
 //        }
-////        setTimeout({
-//            scrollToCenter()
-//        })
+        setTimeout ({
+            scrollToCenter()
+        })
 
     }
 
@@ -94,7 +98,7 @@ val ListComponent = FC<Props> {
                 className = ClassName("fixture-item")
                 FixtureComponent {
                     value = fixture
-                    underLine = if (index == first) UnderLine.NEXT else null
+                    underLines = if (index == first) (fixture.underLines + UnderLine.NEXT) else fixture.underLines
                 }
             }
         }

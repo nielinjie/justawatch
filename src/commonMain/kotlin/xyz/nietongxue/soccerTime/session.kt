@@ -3,7 +3,7 @@ package xyz.nietongxue.soccerTime
 import kotlinx.serialization.Serializable
 
 enum class UnderLine {
-    NEXT, WATCHED, HOT, APPEARED,TAG
+    NEXT, WATCHED, HOT, APPEARED,TAG,COLLAPSED
 }
 @Serializable
 data class Session(val id:String,val customize: Customize){

@@ -21,7 +21,13 @@ val defaultAppMe = object : App() {
         put(
             Session(
                 "_me", Customize(
-                    emptyMap(), listOf(
+                    mapOf(
+                        UnderLine.COLLAPSED to listOf(
+                            NegativeTagsFilter,NoTagFilter
+                        )
+                    ),
+
+                    listOf(
                         PinedTeam("MUN"), PinedTeam("TOT"),
                         Rank(onlySupportedLeague, 4),
                         Rank(onlySupportedLeague, -3),

@@ -4,6 +4,7 @@ import csstype.*
 import emotion.react.css
 import react.FC
 import react.Props
+import react.create
 import react.dom.html.ReactHTML.div
 import react.useState
 import kotlin.js.Date
@@ -21,32 +22,47 @@ enum class Direction {
 
 external interface FixtureProps : Props {
     var value: FixtureDetailed
-    var underLine: UnderLine?
+    var underLines: Set<UnderLine>
 }
 
 val FixtureComponent = FC<FixtureProps> { props ->
     val (expanded, setExpanded) = useState<Boolean>(false)
+    val collapsed = props.underLines.contains(UnderLine.COLLAPSED)
     val fixtureDetailed = props.value
     val durationOffset = durationOffset(fixtureDetailed.fixture.date * 1000, Date.now().toLong())
+    fun itemCollapsed(): Boolean {
+        return (durationOffset.after && collapsed) && !expanded
+    }
+
     with(fixtureDetailed) {
         div {
             onClick = { setExpanded(!expanded) }
             css {
-                fontSize = 16 .px
-                margin = 20.px
-                marginTop = 32.px
+                fontSize = 16.px
+                marginLeft = 20.px
+                marginRight = 20.px
+                marginTop = if (itemCollapsed()) {
+                    (5).px
+                } else {
+                    32.px
+                }
+                marginBottom = if (itemCollapsed()) {
+                    (5).px
+                } else {
+                    32.px
+                }
                 position = Position.relative
             }
             //抬头段
-            if (props.underLine == UnderLine.NEXT) {
+            if (props.underLines.contains(UnderLine.NEXT)) {
                 div {//clock head
                     css {
                         fontFamily = FontFamily.monospace
                         color = NamedColor.green
-                        fontSize = 22 .px
+                        fontSize = 22.px
                         fontWeight = FontWeight.bold
                         textAlign = TextAlign.center
-                        marginBottom = 12 .px
+                        marginBottom = 12.px
                     }
                     +durationOffset.string
                 }
@@ -54,7 +70,7 @@ val FixtureComponent = FC<FixtureProps> { props ->
             div {
                 css {
                     fontWeight = FontWeight.bolder
-                    height = 3.em
+                    height = if (itemCollapsed()) 1.em else 3.em
                     fontFamily = FontFamily.sansSerif
                     if (!durationOffset.after) color = NamedColor.grey
 
@@ -65,24 +81,33 @@ val FixtureComponent = FC<FixtureProps> { props ->
                     alignItems = AlignItems.center
 
                 }
+                if (itemCollapsed()) {
+                    div {}
+                    TagsCom {
+                        tags = this@with.tags
+                        this.collapsed = collapsed
+                    }
+                    div {}
+                } else {
+                    TeamComponent {
+                        team = teams.first
+                        direction = Direction.LEFT
+                    }
 
+                    TagsCom {
+                        tags = this@with.tags
+                        this.collapsed = collapsed
+                    }
+                    TeamComponent {
+                        team = teams.second
+                        direction = Direction.RIGHT
 
-                TeamComponent {
-                    team = teams.first
-                    direction = Direction.LEFT
-                }
-
-                TagsCom{
-                    tags = this@with.tags
-                }
-                TeamComponent {
-                    team = teams.second
-                    direction = Direction.RIGHT
-
+                    }
                 }
             }
+
+            //状态段
             if (expanded) {
-                //状态段
                 StandingComponent {
                     this.fixtureDetailed = fixtureDetailed
                 }
@@ -91,11 +116,12 @@ val FixtureComponent = FC<FixtureProps> { props ->
                 }
             }
             //结果段
-            if (props.underLine != UnderLine.NEXT) {
-
-                StatusComponent {
-                    fixture = fixtureDetailed.fixture
-                    this.durationOffset = durationOffset
+            if (!props.underLines.contains(UnderLine.NEXT)) {
+                if (!itemCollapsed()) {
+                    StatusComponent {
+                        fixture = fixtureDetailed.fixture
+                        this.durationOffset = durationOffset
+                    }
                 }
             }
         }

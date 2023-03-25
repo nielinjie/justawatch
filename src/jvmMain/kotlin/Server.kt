@@ -86,7 +86,8 @@ fun main() {
                             it.tags + it.aTeamTags + it.bTeamTags
                         )
                     }
-                    call.respond(re)
+                    val filtered = Filtering(session).filter(re)
+                    call.respond(filtered)
                 }
             }
             route("/api/standings/{teamId?}") {

@@ -10,20 +10,24 @@ import xyz.nietongxue.soccerTime.util.ColorU
 
 external interface TagsProps : Props {
     var tags: List<Tag>
+    var collapsed: Boolean
+
 }
 
 external interface TagProps : Props {
     var value: Tag
+    var collapsed: Boolean
 }
 
-val TagsCom = FC<TagsProps> {
+val TagsCom = FC<TagsProps> {props->
     div {
         css {
 
         }
-        it.tags.sortedBy { it.power }.forEach {
+        props.tags.sortedBy { it.power }.forEach {
             TagCom {
                 value = it
+                collapsed = props.collapsed
             }
         }
     }
@@ -37,7 +41,11 @@ val TagCom = FC<TagProps> {
     span {
         css {
             width = 0.3.em
-            height = 1.em
+            height = if(it.collapsed) {
+                0.3.em
+            }else {
+                1.em
+            }
             marginLeft = 0.1.em
             marginRight = 0.1.em
             backgroundColor = Color(
@@ -60,6 +68,7 @@ val TagCom = FC<TagProps> {
         +" "
     }
 }
+
 
 val TagWithTextCom = FC<TagProps> {
     div {
