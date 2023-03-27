@@ -6,6 +6,9 @@ val ktorVersion = "2.0.3"
 val logbackVersion = "1.2.11"
 val kotlinWrappersVersion = "1.0.0-pre.521"
 
+
+
+
 plugins {
     kotlin("multiplatform") version "1.8.0"
     application //to run JVM part
@@ -22,6 +25,11 @@ group = "xyz.nietongxue"
 version = "1.0-SNAPSHOT"
 
 repositories {
+    maven("https://maven.aliyun.com/nexus/content/groups/public/")
+
+    maven(
+        "https://maven.aliyun.com/nexus/content/repositories/jcenter"
+    )
     mavenCentral()
     maven("https://maven.universablockchain.com/")
 
@@ -73,7 +81,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-client-cio:$ktorVersion")
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
-                implementation("io.klogging:klogging-jvm:0.4.12")
+                implementation("io.klogging:klogging-jvm:0.4.13")
                 implementation("org.kodein.di:kodein-di:7.18.0")
                 implementation("io.ktor:ktor-server-conditional-headers:$ktorVersion")
                 implementation("io.ktor:ktor-server-caching-headers:$ktorVersion")
