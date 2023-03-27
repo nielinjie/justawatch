@@ -18,20 +18,18 @@ external interface ToNowProps : Props {
 }
 
 
-
 val ToNowButton = FC<ToNowProps> { props ->
 
-        Fab {
-
-            onClick = {
-                props.onClick()
-            }
-            color = FabColor.primary
-            size = Size.large
-            PlayArrow {
-            }
-
+    Fab {
+        onClick = {
+            props.onClick()
         }
+        color = FabColor.primary
+        size = Size.large
+        PlayArrow {
+        }
+
+    }
 }
 //val ToNowButton = FC<ToNowProps> { props ->
 //    val radius = 24

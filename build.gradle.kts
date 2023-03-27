@@ -6,9 +6,6 @@ val ktorVersion = "2.0.3"
 val logbackVersion = "1.2.11"
 val kotlinWrappersVersion = "1.0.0-pre.521"
 
-
-
-
 plugins {
     kotlin("multiplatform") version "1.8.0"
     application //to run JVM part
@@ -25,11 +22,11 @@ group = "xyz.nietongxue"
 version = "1.0-SNAPSHOT"
 
 repositories {
-    maven("https://maven.aliyun.com/nexus/content/groups/public/")
-
-    maven(
-        "https://maven.aliyun.com/nexus/content/repositories/jcenter"
-    )
+//    maven("https://maven.aliyun.com/nexus/content/groups/public/")
+//
+//    maven(
+//        "https://maven.aliyun.com/nexus/content/repositories/jcenter"
+//    )
     mavenCentral()
     maven("https://maven.universablockchain.com/")
 

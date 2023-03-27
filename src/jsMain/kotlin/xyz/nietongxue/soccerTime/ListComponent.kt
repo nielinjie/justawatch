@@ -3,6 +3,7 @@ import emotion.react.css
 import js.core.jso
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import mui.material.*
 import react.*
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.li
@@ -23,9 +24,10 @@ val ListComponent = FC<Props> {
     var fixtures by useState(emptyList<FixtureDetailed>())
     var first by useState<Int>(-1)
     var time by useState(Date.now().toLong())
+    var openDialog by useState(false)
     fun scrollToCenter() {
-        console.log("scrolling")
-        console.log(nextFixtureItemDomElement)
+//        console.log("scrolling")
+//        console.log(nextFixtureItemDomElement)
         nextFixtureItemDomElement?.scrollIntoView(jso {
             block = ScrollLogicalPosition.center
             behavior = ScrollBehavior.smooth
@@ -70,7 +72,7 @@ val ListComponent = FC<Props> {
         }
         MoreButton {
             onClick = {
-                console.log("clicked")
+                openDialog = true
             }
         }
         ToNowButton {
@@ -81,7 +83,7 @@ val ListComponent = FC<Props> {
     ul {
         css {
             listStyleType = None.none
-            height = 98.vh
+            height = 90.vh
             overflowY = Auto.auto
             overflowX = Overflow.hidden
             paddingInlineStart = 0.px
@@ -100,6 +102,26 @@ val ListComponent = FC<Props> {
                     value = fixture
                     underLines = if (index == first) (fixture.underLines + UnderLine.NEXT) else fixture.underLines
                 }
+            }
+        }
+    }
+
+
+    Dialog {
+        this.open = openDialog
+        onClose = {  _,_ -> openDialog = false}
+//        DialogTitle{
+//            + "this is a dialog title"
+//        }
+        DialogContent {
+            DialogContentText {
+                +"Some Customize here (TODO)"
+            }
+        }
+        DialogActions{
+            Button {
+                onClick = {  _ -> openDialog = false}
+                + "OK"
             }
         }
     }

@@ -19,7 +19,7 @@ val ExpandTags = FC<ETProps> {
             marginTop = 1.em
         }
         tags.sortedBy { it.power }.forEach { tag ->
-            TagWithTextCom{
+            TagWithTextCom {
                 value = tag
             }
         }

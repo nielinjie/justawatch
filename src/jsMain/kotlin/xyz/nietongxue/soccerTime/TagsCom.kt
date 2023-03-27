@@ -8,6 +8,12 @@ import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.span
 import xyz.nietongxue.soccerTime.util.ColorU
 
+
+
+val blueColor = ColorU("#3874CB") //color of mui primary
+val lb = blueColor.lighten(0.4f)
+val llb = blueColor.lighten(0.7f)
+val none = ColorU("#FFFFFF")
 external interface TagsProps : Props {
     var tags: List<Tag>
     var collapsed: Boolean
@@ -24,6 +30,15 @@ val TagsCom = FC<TagsProps> {props->
         css {
 
         }
+        if(props.tags.isEmpty() && props.collapsed) {
+            div {
+                css{
+                    color = Color(lb.string())
+                    fontFamily = FontFamily.monospace
+                }
+                +"-"
+            }
+        }
         props.tags.sortedBy { it.power }.forEach {
             TagCom {
                 value = it
@@ -34,10 +49,7 @@ val TagsCom = FC<TagsProps> {props->
 }
 
 val TagCom = FC<TagProps> {
-    val blueColor = ColorU("#3874CB") //color of mui primary
-    val lb = blueColor.lighten(0.4f)
-    val llb = blueColor.lighten(0.7f)
-    val none = ColorU("#FFFFFF")
+
     span {
         css {
             width = 0.3.em
