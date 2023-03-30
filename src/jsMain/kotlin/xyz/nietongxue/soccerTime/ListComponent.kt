@@ -41,7 +41,7 @@ val ListComponent = FC<Props> {
 //        first = fixtures.indexOfFirst {
 //            (it.fixture.date * 1000) > time
 //        }
-        setTimeout ({
+        setTimeout({
             scrollToCenter()
         })
 
@@ -83,7 +83,7 @@ val ListComponent = FC<Props> {
     ul {
         css {
             listStyleType = None.none
-            height = 90.vh
+            height = 100.pct
             overflowY = Auto.auto
             overflowX = Overflow.hidden
             paddingInlineStart = 0.px
@@ -109,7 +109,7 @@ val ListComponent = FC<Props> {
 
     Dialog {
         this.open = openDialog
-        onClose = {  _,_ -> openDialog = false}
+        onClose = { _, _ -> openDialog = false }
 //        DialogTitle{
 //            + "this is a dialog title"
 //        }
@@ -118,10 +118,10 @@ val ListComponent = FC<Props> {
                 +"Some Customize here (TODO)"
             }
         }
-        DialogActions{
+        DialogActions {
             Button {
-                onClick = {  _ -> openDialog = false}
-                + "OK"
+                onClick = { _ -> openDialog = false }
+                +"OK"
             }
         }
     }
