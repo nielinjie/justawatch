@@ -1,7 +1,8 @@
 package xyz.nietongxue.soccerTime
 
-import csstype.*
-import emotion.css.merge
+import csstype.FontFamily
+import csstype.TextAlign
+import csstype.pct
 import emotion.react.css
 import react.FC
 import react.Props
@@ -20,9 +21,12 @@ val StatusComponent = FC<StatusProps> { props ->
                 fontSize = 80.pct
                 textAlign = TextAlign.center
             }
-            +if (durationOffset.after && durationOffset.duration.inWholeDays <= 7) " ${durationOffset.string} "
+            +if (durationOffset.after) " ${durationOffset.string} "
             else
-                (fixture.result ?: (fixture.status))
+                if (fixture.status != "FT")
+                    "${fixture.result} (${fixture.status})"
+                else
+                    (fixture.result ?: (fixture.status))
         }
     }
 }

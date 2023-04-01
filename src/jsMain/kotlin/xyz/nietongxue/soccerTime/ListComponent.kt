@@ -11,7 +11,6 @@ import react.dom.html.ReactHTML.ul
 import web.html.HTMLLIElement
 import web.scroll.ScrollBehavior
 import web.scroll.ScrollLogicalPosition
-import web.timers.setTimeout
 import xyz.nietongxue.soccerTime.*
 import kotlin.js.Date
 
@@ -36,14 +35,15 @@ val ListComponent = FC<Props> {
     }
 
     fun scrollAndRefresh() {
-        time = Date.now().toLong()
+        scrollToCenter()
+
 
 //        first = fixtures.indexOfFirst {
 //            (it.fixture.date * 1000) > time
 //        }
-        setTimeout({
-            scrollToCenter()
-        })
+//        setTimeout({
+        time = Date.now().toLong()
+//        })
 
     }
 
@@ -110,9 +110,6 @@ val ListComponent = FC<Props> {
     Dialog {
         this.open = openDialog
         onClose = { _, _ -> openDialog = false }
-//        DialogTitle{
-//            + "this is a dialog title"
-//        }
         DialogContent {
             DialogContentText {
                 +"Some Customize here (TODO)"
