@@ -134,7 +134,7 @@ class Tagging(private val session: Session, val app: App) {
                 val tz = TimeZone.of("Asia/Shanghai")
                 val local = fixtureTimeIn.toLocalDateTime(tz)
                 return if (night.timeIn(local.time))
-                    Tag("chilly time - ${local.time}", power = Power.NEGATIVE)
+                    Tag("awkward time - ${local.time}", power = Power.NEGATIVE)
                 else null
             }
             else -> error("not supported tagger")

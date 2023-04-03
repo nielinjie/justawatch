@@ -24,7 +24,7 @@ val StatusComponent = FC<StatusProps> { props ->
             +if (durationOffset.after) " ${durationOffset.string} "
             else
                 if (fixture.status != "FT")
-                    "${fixture.result} (${fixture.status})"
+                    "${fixture.result .orEmpty()} (${fixture.status})"
                 else
                     (fixture.result ?: (fixture.status))
         }

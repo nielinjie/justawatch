@@ -15,11 +15,14 @@ class Filtering(private val session: Session) {
     private fun map(f: Pair<UnderLine, Filter>, list: List<FixtureDetailed>): List<FixtureDetailed> {
         return when (f.second) {
             is NegativeTagsFilter -> {
-                addUnderLineOn(list) { it.tags.any { tag -> tag.power == Power.NEGATIVE } }
+                addUnderLineOn(
+                    list,
+                    UnderLine.COLLAPSED
+                ) { it.tags.any { tag -> tag.power == Power.NEGATIVE } && !it.tags.any { tag -> tag.power == Power.HIGH } }
             }
 
             is NoTagFilter -> {
-                addUnderLineOn(list) { it.tags.isEmpty() }
+                addUnderLineOn(list, UnderLine.COLLAPSED) { it.tags.isEmpty() }
             }
 
             else -> TODO()
@@ -27,10 +30,10 @@ class Filtering(private val session: Session) {
     }
 
     private fun addUnderLineOn(
-        list: List<FixtureDetailed>, pre: (fix: FixtureDetailed) -> Boolean,
+        list: List<FixtureDetailed>, underLine: UnderLine, pre: (fix: FixtureDetailed) -> Boolean,
     ) = list.map {
         if (pre(it)) {
-            it.copy(underLines = it.underLines + UnderLine.COLLAPSED)
+            it.copy(underLines = it.underLines + underLine)
         } else it
     }
 
