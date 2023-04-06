@@ -9,7 +9,6 @@ import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import java.io.File
 
 
 abstract class ApiUser(val apiId:String) {
@@ -22,8 +21,9 @@ abstract class ApiUser(val apiId:String) {
 
     abstract val url: String
     abstract val params: Map<String, String>
-    abstract fun withResponse(stringBody: String): Unit
+    abstract fun withResponse(stringBody: String)
     suspend fun getting() {
+        val api = System.getenv("API")
         logger.info("begin to calling api - $apiId")
         val client = HttpClient(CIO)
         val response: HttpResponse = client.get(url) {
@@ -31,7 +31,7 @@ abstract class ApiUser(val apiId:String) {
                 params.forEach {
                     parameter(it.key, it.value)
                 }
-                header("X-RapidAPI-Key", "8800dd04ddmshd5c8c314ca6cf6ep1e4b0djsnf51fbed06dfb")
+                header("X-RapidAPI-Key", api)
                 header("X-RapidAPI-Host", "api-football-v1.p.rapidapi.com")
             }
         }
