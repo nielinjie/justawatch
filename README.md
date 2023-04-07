@@ -6,7 +6,7 @@
 
 https://justawatch.qingyangyunyun.cloud
 
-![](docs/just screen.png)
+![](https://www.qingyangyunyun.cloud/images/justscreen.jpg)
 
 
 
