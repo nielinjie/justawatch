@@ -8,13 +8,19 @@ fun fromStandingResponse(response: String): List<Standing> {
         .jsonObject
         .getByPath("league.standings")!!.jsonArray[0].jsonArray
     //TODO 可能一个赛事有多个standing？杯赛？
+    val leagueId = je["response"]!!.jsonArray[0]
+        .jsonObject
+        .getByPath("league.id")!!.jsonPrimitive.int
+    val season = je["response"]!!.jsonArray[0]
+        .jsonObject
+        .getByPath("league.season")!!.jsonPrimitive.int
     return sts.map {
         val js = it.jsonObject
         val rank = js["rank"]!!.jsonPrimitive.int
         val teamId = js.getByPath("team.id")!!.jsonPrimitive.int
         val score = js["points"]!!.jsonPrimitive.int
         val form = js["form"]!!.jsonPrimitive.content
-        Standing(teamId, rank, score, Form.fromString(form))
+        Standing(teamId, leagueId to season, rank, score, Form.fromString(form))
     }
 }
 

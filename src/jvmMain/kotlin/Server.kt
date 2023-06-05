@@ -64,7 +64,7 @@ fun main() {
             }
             route("/api/fixtures") {
                 get {
-                    call.respond(app.fixtureRepository.find())
+                    call.respond(app.fixtureRepository.fixtures)
                 }
             }
             route("/api/fixtures/detailed") {
@@ -73,16 +73,22 @@ fun main() {
                     //https://ktor.io/docs/sessions.html#custom_storage
                     val sessionId = "_me"
                     val session = app.sessionRepository.get(sessionId) ?: error("no session find")
-                    val fixtures = app.fixtureRepository.find()
-                    val standings = app.standingRepository.standings.associateBy { it.teamId }
-                    val teams = app.teamRepository.teams.associateBy { it.id }
+                    val fixtures = app.fixtureRepository.fixtures
+//                    val standings = app.standingRepository.standings.associateBy { it.teamId }
                     val tagging = Tagging(session, app)
                     val fixtureWithTags = tagging.tagging(fixtures)
                     val re: List<FixtureDetailed> = fixtureWithTags.map {
                         FixtureDetailed(
                             it.fixture,
-                            standings[it.fixture.teamAId]!! to standings[it.fixture.teamBId]!!,
-                            teams[it.fixture.teamAId]!! to teams[it.fixture.teamBId]!!,
+                            app.standingRepository.find(
+                                it.fixture.teamAId,
+                                it.fixture.leagueSeason
+                            ) to
+                                    app.standingRepository.find(
+                                        it.fixture.teamBId, it.fixture.leagueSeason
+                                    ),
+                            app.teamRepository.findById(it.fixture.teamAId)!!
+                                    to app.teamRepository.findById(it.fixture.teamBId)!!,
                             it.tags + it.aTeamTags + it.bTeamTags
                         )
                     }
@@ -90,15 +96,15 @@ fun main() {
                     call.respond(filtered)
                 }
             }
-            route("/api/standings/{teamId?}") {
-                get {
-                    call.respond(
-
-                        call.parameters["teamId"]?.let {
-                            app.standingRepository.findById(it.toInt())
-                        } ?: emptyList<Standing>())
-                }
-            }
+//            route("/api/standings/{teamId?}") {
+//                get {
+//                    call.respond(
+//
+//                        call.parameters["teamId"]?.let {
+//                            app.standingRepository.findById(it.toInt())
+//                        } ?: emptyList<Standing>())
+//                }
+//            }
             route("/api/status/{api?}") {
                 get {
                     call.respond(ServiceStatusRepository.calling(call.parameters["api"]))

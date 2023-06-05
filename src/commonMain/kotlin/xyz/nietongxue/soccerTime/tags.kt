@@ -36,8 +36,8 @@ data class FixtureWithTags(
 
 
 @Serializable
-data class League(val league: String) : Tagger {
-    override val description = "league: $league"
+data class OfLeague(val leagueId: Int) : Tagger {
+    override val description = "league: $leagueId"
     override val objectType = ObjectType.FIXTURE
 }
 
@@ -50,7 +50,7 @@ data class PinedTeam(val name: String) : Tagger {
 
 //比如欧冠区争夺
 @Serializable
-data class Rank(val league: String, val rank: Int) : Tagger {
+data class Rank(val leagueId: Int, val rank: Int) : Tagger {
     override val description: String = "position - $rank"
     override val objectType = ObjectType.TEAM
 }
@@ -79,19 +79,19 @@ data class AtNight(val night: Night) : Tagger {
 
 //比如榜首争霸赛
 @Serializable
-data class RankDiff(val league: String, val rankDiff: Int) : Tagger {
+data class RankDiff( val rankDiff: Int) : Tagger {
     override val description: String = "rankDiff - $rankDiff"
     override val objectType = ObjectType.FIXTURE
 }
 
 @Serializable
-data class PointsDiff(val league: String, val pointDiff: Int = 3) : Tagger {
+data class PointsDiff( val pointDiff: Int = 3) : Tagger {
     override val description: String = "pointsDiff - $pointDiff"
     override val objectType = ObjectType.FIXTURE
 }
 
 @Serializable
-data class PointsBelowFromRank(val league: String, val pointsDiff: Int, val rank: Int) : Tagger {
+data class PointsBelowFromRank(val leagueId: Int, val pointsDiff: Int, val rank: Int) : Tagger {
     override val objectType: ObjectType = ObjectType.TEAM
     override val description: String = "pointsDiffFromRank - $pointsDiff points from $rank"
 }
@@ -99,7 +99,7 @@ data class PointsBelowFromRank(val league: String, val pointsDiff: Int, val rank
 //比如欧冠淘汰赛
 //比如足总杯半决赛
 @Serializable
-data class LeaguePhase(val league: String) : Tagger {
+data class LeaguePhase(val leagueId: Int) : Tagger {
     override val description: String
         get() = TODO("Not yet implemented")
     override val objectType = ObjectType.FIXTURE

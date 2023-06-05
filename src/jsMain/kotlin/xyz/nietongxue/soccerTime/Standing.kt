@@ -55,10 +55,14 @@ val TeamStandingCom = FC<TeamStandingProps> { props ->
                     fontSize = 12.px
                     fontFamily = FontFamily.monospace
                 }
-                +"@${standing.rank} ${standing.points}p "
+                if(standing==null){
+                    +"--"
+                    return@span
+                }else{
+                +"@${standing!!.rank} ${standing!!.points}p "
                 FormCom {
-                    form = standing.form
-                }
+                    form = standing!!.form
+                }}
             }
         }
 
@@ -66,7 +70,7 @@ val TeamStandingCom = FC<TeamStandingProps> { props ->
 }
 
 external interface TeamStandingProps : Props {
-    var standing: Standing
+    var standing: Standing?
     var direction: Direction
 }
 

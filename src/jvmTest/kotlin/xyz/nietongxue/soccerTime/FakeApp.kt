@@ -5,16 +5,14 @@ val fakeApp = object : App() {
         val jsonString = javaClass.getResource("/fixturesApiResponse.json")!!.readText()
         val fs = fromApiResponse(jsonString)
         FixtureRepository().apply {
-            fixtures.clear()
-            fixtures.addAll(fs.orEmpty())
+            update(fs ?: emptyList())
         }
     }
     override val standingRepository: StandingRepository by lazy {
         val standingJson = javaClass.getResource("/standingApiResponse.json")!!.readText()
         val fs = fromStandingResponse(standingJson)
         StandingRepository().apply {
-            standings.clear()
-            standings.addAll(fs)
+            this.update(fs)
         }
     }
     override val sessionRepository: SessionRepository by lazy {
@@ -24,16 +22,17 @@ val fakeApp = object : App() {
         val teamJson = javaClass.getResource("/teamInfoApiResponse.json")!!.readText()
         val fs = fromTeamResponse(teamJson)
         TeamRepository().apply {
-            teams.clear()
-            teams.addAll(fs)
+            this.update(fs)
         }
     }
 
 }
 
-val fakeSession = Session("_fake",Customize(
-    filters = emptyMap(),
-    taggers = listOf (
-        PinedTeam("MUN")
+val fakeSession = Session(
+    "_fake", Customize(
+        filters = emptyMap(),
+        taggers = listOf(
+            PinedTeam("MUN")
+        )
     )
-))
+)

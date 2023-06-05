@@ -30,7 +30,7 @@ interface Scheduler {
                 }
             }
         }
-        val longTerm =object : Scheduler {
+        val longTerm = object : Scheduler {
             override fun next(preResult: TaskResult): Instant {
                 return when (preResult) {
                     TaskResult.SUCCESS -> now().plus(1.days)
@@ -47,14 +47,17 @@ abstract class ApiCaller {
     private var timer: Timer? = null
     abstract val apiId: String
     abstract val scheduler: Scheduler
-    abstract val user: ApiUser
+    abstract val users: List<ApiUser>
     private suspend fun actionImpl() {
-        user.getting()
+        //TODO 这里需要研究，这样子可能是串行的。
+        users.forEach {
+            it.getting()
+        }
     }
 
-    class T(val caller:ApiCaller) : TimerTask() {
+    class T(val caller: ApiCaller) : TimerTask() {
         override fun run() {
-            caller. action()
+            caller.action()
         }
     }
 

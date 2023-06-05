@@ -5,20 +5,18 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Fixture(
     val id: Int,
+    val leagueSeason: LeagueSeason,
     //EpochSeconds, not ms!!
     val date: Long,
     val teamAId: Int,
     val teamBId: Int,
     val status: String,
     val result: String?
-) {
-}
+)
 
 @Serializable
 data class Team(val id: Int, val name: String, val code: String, val logo: String)
 
-@Serializable
-data class Standing(val teamId:Int, val rank: Int, val points: Int, val form: Form)
 
 @Serializable
 data class Form(val formChars: List<String>) {
@@ -31,4 +29,10 @@ data class Form(val formChars: List<String>) {
 
 
 @Serializable
-data class FixtureDetailed(val fixture: Fixture, val standings: Pair<Standing,Standing>,val teams:Pair<Team,Team>,val tags: List<Tag>,val underLines:Set<UnderLine> = emptySet())
+data class FixtureDetailed(
+    val fixture: Fixture,
+    val standings: Pair<Standing?, Standing?>,
+    val teams: Pair<Team, Team>,
+    val tags: List<Tag>,
+    val underLines: Set<UnderLine> = emptySet()
+)
