@@ -1,5 +1,7 @@
 package xyz.nietongxue.soccerTime
 
+import io.klogging.logger
+
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Instant
 import java.util.*
@@ -9,11 +11,11 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 
-enum class TaskResult {
-    SUCCESS,
-    ERROR,
-    INIT,
-    CANCEL
+sealed class TaskResult {
+    class SUCCESS<R>(val result: R) : TaskResult()
+    class ERROR(val e: Throwable) : TaskResult()
+    object INIT : TaskResult()
+    object CANCEL : TaskResult()
 }
 
 interface Scheduler {
@@ -23,9 +25,9 @@ interface Scheduler {
         val default = object : Scheduler {
             override fun next(preResult: TaskResult): Instant {
                 return when (preResult) {
-                    TaskResult.SUCCESS -> now().plus(1.hours)
+                    is TaskResult.SUCCESS<*> -> now().plus(1.hours)
                     TaskResult.INIT -> now().plus(3.seconds)
-                    TaskResult.ERROR -> now().plus(1.minutes)
+                    is TaskResult.ERROR -> now().plus(1.minutes)
                     else -> error("not supported")
                 }
             }
@@ -33,9 +35,9 @@ interface Scheduler {
         val longTerm = object : Scheduler {
             override fun next(preResult: TaskResult): Instant {
                 return when (preResult) {
-                    TaskResult.SUCCESS -> now().plus(1.days)
+                    is TaskResult.SUCCESS<*> -> now().plus(1.days)
                     TaskResult.INIT -> now().plus(3.seconds)
-                    TaskResult.ERROR -> now().plus(1.minutes)
+                    is TaskResult.ERROR -> now().plus(1.minutes)
                     else -> error("not supported")
                 }
             }
@@ -43,19 +45,18 @@ interface Scheduler {
     }
 }
 
-abstract class ApiCaller {
+abstract class ApiCaller<R> {
+    val logger = logger("api caller")
     private var timer: Timer? = null
     abstract val apiId: String
     abstract val scheduler: Scheduler
-    abstract val users: List<ApiUser>
-    private suspend fun actionImpl() {
+    abstract val user: ApiUser<R>
+    private suspend fun actionImpl(): R {
         //TODO 这里需要研究，这样子可能是串行的。
-        users.forEach {
-            it.getting()
-        }
+        return user.getting()
     }
 
-    class T(val caller: ApiCaller) : TimerTask() {
+    class T<TR>(val caller: ApiCaller<TR>) : TimerTask() {
         override fun run() {
             caller.action()
         }
@@ -64,20 +65,29 @@ abstract class ApiCaller {
     fun action() {
         runBlocking {
             try {
-                actionImpl()
+                val r = actionImpl()
                 ServiceStatusRepository.addCalling(Calling(apiId, now().toEpochMilliseconds(), Status.SUCCESS, ""))
+                val instant = scheduler.next(TaskResult.SUCCESS(r))
+                timer!!.schedule(T(this@ApiCaller), instant.toDate())
+                logger.info("scheduled for success, next calling at $instant")
             } catch (e: Exception) {
+                logger.error(e)
                 ServiceStatusRepository.addCalling(Calling(apiId, now().toEpochMilliseconds(), Status.ERROR, e.message))
+                val instant = scheduler.next(TaskResult.ERROR(e))
+                timer!!.schedule(T(this@ApiCaller), instant.toDate())
+                logger.info("scheduled for error, next calling at $instant")
             }
-            val instant = scheduler.next(TaskResult.SUCCESS)
-            timer!!.schedule(T(this@ApiCaller), instant.toDate())
+
         }
     }
 
     fun init() {
-        timer = Timer("timer-$apiId")
-        val initInstant = scheduler.next(TaskResult.INIT)
-        timer!!.schedule(T(this@ApiCaller), initInstant.toDate())
+        runBlocking {
+            timer = Timer("timer-$apiId")
+            val initInstant = scheduler.next(TaskResult.INIT)
+            timer!!.schedule(T(this@ApiCaller), initInstant.toDate())
+            logger.info("scheduled for init, next calling at $initInstant")
+        }
     }
 }
 

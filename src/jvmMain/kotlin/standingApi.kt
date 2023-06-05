@@ -4,6 +4,7 @@ import kotlinx.serialization.json.*
 
 fun fromStandingResponse(response: String): List<Standing> {
     val je = Json.parseToJsonElement(response).jsonObject
+    if( je["response"]!!.jsonArray.isEmpty()) return emptyList()
     val sts = je["response"]!!.jsonArray[0]
         .jsonObject
         .getByPath("league.standings")!!.jsonArray[0].jsonArray
@@ -20,7 +21,8 @@ fun fromStandingResponse(response: String): List<Standing> {
         val teamId = js.getByPath("team.id")!!.jsonPrimitive.int
         val score = js["points"]!!.jsonPrimitive.int
         val form = js["form"]!!.jsonPrimitive.content
-        Standing(teamId, leagueId to season, rank, score, Form.fromString(form))
+        val group = js["group"]?.jsonPrimitive?.content
+        Standing(teamId, leagueId to season, rank, score, Form.fromString(form),group)
     }
 }
 

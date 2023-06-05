@@ -4,10 +4,14 @@ import org.kodein.di.*
 
 val di = DI{
     bindSingleton<App> { defaultApp}
-    bindSet<ApiCaller> {
-        add {singleton { FixtureCaller(instance()) }}
-        add {singleton { StandingCaller(instance()) }}
-        add {singleton { TeamCaller(instance()) }}
+    bindSingleton<List<ApiCaller<*>>> {
+        (currents.map {
+            TeamCaller(instance(), it)
+        } + currents.map {
+            StandingCaller(instance(), it)
+        } + currents.map {
+            FixtureCaller(instance(), it)
+        }) as List<ApiCaller<*>>
     }
 }
 

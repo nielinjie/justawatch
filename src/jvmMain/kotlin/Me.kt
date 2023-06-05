@@ -5,11 +5,16 @@ import org.kodein.di.*
 
 val diMe = DI {
     bindSingleton<App> { defaultAppMe }
-    bindSet<ApiCaller> {
-        add { singleton { FixtureCaller(instance()) } }
-        add { singleton { StandingCaller(instance()) } }
-        add { singleton { TeamCaller(instance()) } }
+    bindSingleton<List<ApiCaller<*>>> {
+        (currents.map {
+            TeamCaller(instance(), it)
+        } + currents.map {
+            StandingCaller(instance(), it)
+        } + currents.map {
+            FixtureCaller(instance(), it)
+        }) as List<ApiCaller<*>>
     }
+
 }
 
 val defaultAppMe = object : App() {
@@ -23,9 +28,8 @@ val defaultAppMe = object : App() {
                 "_me", Customize(
                     mapOf(
                         UnderLine.COLLAPSED to listOf(
-                            NegativeTagsFilter,NoTagFilter
-                        )
-                        ,UnderLine.HIDDEN to listOf(LeagueFilter(listOf(currentPE,currentCL)))
+                            NegativeTagsFilter, NoTagFilter
+                        ), UnderLine.HIDDEN to listOf(LeagueFilter(listOf(currentPE, currentCL)))
                     ),
 
                     listOf(
@@ -36,7 +40,7 @@ val defaultAppMe = object : App() {
                         PointsDiff(currentPE.leagueId),
                         PointsBelowFromRank(currentPE.leagueId, 3, 4), //离欧冠区3分
                         PointsBelowFromRank(currentPE.leagueId, 3, -4), //离摆脱降级区3分
-                        AtNight(Night(LocalTime(23,0,0), LocalTime(18,0,0)))
+                        AtNight(Night(LocalTime(23, 0, 0), LocalTime(18, 0, 0)))
                     )
                 )
             )

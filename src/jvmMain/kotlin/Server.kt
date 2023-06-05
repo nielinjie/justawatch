@@ -23,7 +23,7 @@ fun main() {
     val productMode: Boolean = System.getenv("productMode") != null
 
     val port = System.getenv("PORT")?.toInt() ?: 9000
-    val callers by diMe.instance<Set<ApiCaller>>()
+    val callers by diMe.instance<List<ApiCaller<*>>>()
     val app by diMe.instance<App>()
 
     callers.forEach { it.init() }

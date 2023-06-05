@@ -11,18 +11,17 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 
 
-abstract class ApiUser(val apiId:String) {
+abstract class ApiUser<R>(val apiId:String) {
     init {
         loggingConfiguration { DEFAULT_CONSOLE() }
-        println("apiid - $apiId")
     }
 
-    val logger = logger("main")
+    val logger = logger("api user")
 
     abstract val url: String
     abstract val params: Map<String, String>
-    abstract fun withResponse(stringBody: String)
-    suspend fun getting() {
+    abstract fun withResponse(stringBody: String):R
+    suspend fun getting():R {
         val api = System.getenv("API")
         logger.info("begin to calling api - $apiId")
         val client = HttpClient(CIO)
@@ -38,8 +37,9 @@ abstract class ApiUser(val apiId:String) {
         if (response.status == HttpStatusCode.OK) {
             val stringBody: String = response.body()
             logger.info("calling api succeeded - $apiId")
-            withResponse(stringBody)
+            val r = withResponse(stringBody)
             logger.info("proceeded - $apiId")
+            return r
         } else {
             logger.error("calling api failed - $apiId")
             logger.info(response.body<String>())
