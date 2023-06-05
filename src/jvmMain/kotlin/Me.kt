@@ -25,6 +25,7 @@ val defaultAppMe = object : App() {
                         UnderLine.COLLAPSED to listOf(
                             NegativeTagsFilter,NoTagFilter
                         )
+                        ,UnderLine.HIDDEN to listOf(LeagueFilter(listOf(currentPE,currentCL)))
                     ),
 
                     listOf(

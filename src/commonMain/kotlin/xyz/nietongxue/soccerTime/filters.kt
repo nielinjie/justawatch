@@ -23,6 +23,12 @@ object NoTagFilter: Filter {
 }
 
 @Serializable
+data class LeagueFilter(val leagueSessions: List<LeagueSeason>):Filter{
+    override val description: String
+        get() = "League in ${leagueSessions.joinToString(",")}"
+}
+
+@Serializable
 data class Composite(val filters: List<Filter>, val operator: CompositeOperator) : Filter{
     override val description: String
         get() = TODO("Not yet implemented")

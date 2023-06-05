@@ -90,17 +90,19 @@ val ListComponent = FC<Props> {
         }
 
         for ((index, fixture) in fixtures.withIndex()) {
-            li {
-                if (index == first) {
-                    ref = RefCallback {
-                        nextFixtureItemDomElement = it
-                        scrollToCenter()
+            if (!(fixture.underLines.contains(UnderLine.HIDDEN))) {
+                li {
+                    if (index == first) {
+                        ref = RefCallback {
+                            nextFixtureItemDomElement = it
+                            scrollToCenter()
+                        }
                     }
-                }
-                className = ClassName("fixture-item")
-                FixtureComponent {
-                    value = fixture
-                    underLines = if (index == first) (fixture.underLines + UnderLine.NEXT) else fixture.underLines
+                    className = ClassName("fixture-item")
+                    FixtureComponent {
+                        value = fixture
+                        underLines = if (index == first) (fixture.underLines + UnderLine.NEXT) else fixture.underLines
+                    }
                 }
             }
         }

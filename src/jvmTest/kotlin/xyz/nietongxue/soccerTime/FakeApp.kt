@@ -30,6 +30,7 @@ val fakeApp = object : App() {
 
 val fakeSession = Session(
     "_fake", Customize(
+
         filters = emptyMap(),
         taggers = listOf(
             PinedTeam("MUN")

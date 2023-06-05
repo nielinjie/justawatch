@@ -3,7 +3,6 @@ package xyz.nietongxue.soccerTime
 import kotlinx.serialization.Serializable
 
 
-const val onlySupportedLeague = "EP"
 
 
 @Serializable
@@ -34,6 +33,7 @@ val currents: List<LeagueSeason> = leagueIds.flatMap { leagueId ->
     }
 }
 val currentPE: LeagueSeason = 39 to 2023
+val currentCL: LeagueSeason = 2 to 2022
 
 val LeagueSeason.leagueId: Int
     get() = first

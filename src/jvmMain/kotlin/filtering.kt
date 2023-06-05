@@ -1,6 +1,6 @@
 package xyz.nietongxue.soccerTime
 
-class Filtering(private val session: Session) {
+class Filtering(private val session: Session,val app: App) {
     fun filter(list: List<FixtureDetailed>): List<FixtureDetailed> {
         val filters = session.customize.filters
         var re = list
@@ -23,6 +23,12 @@ class Filtering(private val session: Session) {
 
             is NoTagFilter -> {
                 addUnderLineOn(list, UnderLine.COLLAPSED) { it.tags.isEmpty() }
+            }
+
+            //并非所有filter一定要依赖于tagging
+            is LeagueFilter -> {
+                val leagueSeasons = (f.second as LeagueFilter).leagueSessions
+                addUnderLineOn(list, UnderLine.HIDDEN) { it.fixture.leagueSeason !in leagueSeasons }
             }
 
             else -> TODO()

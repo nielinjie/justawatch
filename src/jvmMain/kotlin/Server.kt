@@ -92,7 +92,7 @@ fun main() {
                             it.tags + it.aTeamTags + it.bTeamTags
                         )
                     }
-                    val filtered = Filtering(session).filter(re)
+                    val filtered = Filtering(session,app).filter(re)
                     call.respond(filtered)
                 }
             }
