@@ -1,7 +1,7 @@
 package xyz.nietongxue.soccerTime
 
 class TeamRepository {
-    val teamsMap = mutableMapOf<Int, Team>()
+    private val teamsMap = mutableMapOf<Int, Team>()
     fun findById(id: Int) = teamsMap.get(id)
     fun update(teams: List<Team>) {
         teams.forEach {

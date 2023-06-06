@@ -79,11 +79,18 @@ fun findCurrentFixture(fixtures: List<Fixture>): List<Fixture> {
     }
 }
 
-val fixtureScheduler: Scheduler = object : Scheduler {
+class FixtureScheduler(val app: App): Scheduler  {
+    fun fixtures(leagueSeason: LeagueSeason): List<Fixture> {
+        return app.fixtureRepository.fixtures.filter { it.leagueSeason == leagueSeason }
+    }
     override fun next(preResult: TaskResult): Instant {
         return when (preResult) {
             is TaskResult.SUCCESS<*> -> {
-                val fixtures = preResult.result as? List<Fixture> ?: error("no supported result")
+                val fixtures = when (val re = preResult.result) {
+                    is FixtureResult -> re.fixtures //貌似可以统一为下面这个。
+                    is StandingResult -> fixtures(re.leagueSeason)
+                    else -> error("not supported")
+                }
                 val nextFixture = findNextFixture(fixtures)
                 when {
                     findCurrentFixture(fixtures).isNotEmpty() -> now().plus(refreshWhileMatching)
@@ -102,17 +109,18 @@ val fixtureScheduler: Scheduler = object : Scheduler {
     }
 }
 
-class FixtureCaller(val app: App, val leagueSeason: LeagueSeason) : ApiCaller<List<Fixture>>() {
+class FixtureResult ( val leagueSeason: LeagueSeason,val fixtures: List<Fixture>)
+class FixtureCaller(val app: App, val leagueSeason: LeagueSeason) : ApiCaller<FixtureResult>() {
     override val apiId: String = "fixtures - $leagueSeason"
-    override val scheduler: Scheduler = fixtureScheduler
-    override val user: ApiUser<List<Fixture>> =
-        object : ApiUser<List<Fixture>>(apiId) {
+    override val scheduler: Scheduler = FixtureScheduler(app)
+    override val user: ApiUser<FixtureResult> =
+        object : ApiUser<FixtureResult>(apiId) {
             override val url: String = "https://api-football-v1.p.rapidapi.com/v3/fixtures"
             override val params: Map<String, String> = leagueSeason.toParams()
-            override fun withResponse(stringBody: String): List<Fixture> {
+            override fun withResponse(stringBody: String): FixtureResult {
                 val fixtures = fromApiResponse(stringBody)
                 app.fixtureRepository.update(fixtures ?: emptyList())
-                return fixtures ?: emptyList()
+                return FixtureResult(leagueSeason , (fixtures ?: emptyList()))
             }
         }
 

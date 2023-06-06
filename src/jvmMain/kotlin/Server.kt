@@ -96,15 +96,11 @@ fun main() {
                     call.respond(filtered)
                 }
             }
-//            route("/api/standings/{teamId?}") {
-//                get {
-//                    call.respond(
-//
-//                        call.parameters["teamId"]?.let {
-//                            app.standingRepository.findById(it.toInt())
-//                        } ?: emptyList<Standing>())
-//                }
-//            }
+            post("/api/callers/restart"){
+                callers.forEach{
+                    it.restart()
+                }
+            }
             route("/api/status/{api?}") {
                 get {
                     call.respond(ServiceStatusRepository.calling(call.parameters["api"]))

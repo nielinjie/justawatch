@@ -61,7 +61,10 @@ abstract class ApiCaller<R> {
             caller.action()
         }
     }
-
+    fun restart() {
+        timer?.cancel()
+        init()
+    }
     fun action() {
         runBlocking {
             try {

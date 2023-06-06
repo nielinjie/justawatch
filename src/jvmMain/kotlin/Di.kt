@@ -11,7 +11,7 @@ val di = DI{
             StandingCaller(instance(), it)
         } + currents.map {
             FixtureCaller(instance(), it)
-        }) as List<ApiCaller<*>>
+        })
     }
 }
 
