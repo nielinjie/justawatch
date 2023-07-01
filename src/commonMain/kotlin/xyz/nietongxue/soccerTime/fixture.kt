@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 data class Fixture(
     val id: Int,
     val leagueSeason: LeagueSeason,
+    val round:String,
     //EpochSeconds, not ms!!
     val date: Long,
     val teamAId: Int,

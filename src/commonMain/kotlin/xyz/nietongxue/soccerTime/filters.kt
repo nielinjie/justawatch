@@ -13,24 +13,30 @@ interface Filter {
 }
 
 @Serializable
-object NegativeTagsFilter: Filter {
-    override val description: String
-        = "Collapse any NEGATIVE tag"
+object NegativeTagsFilter : Filter {
+    override val description: String = "Collapse any NEGATIVE tag"
 }
+
 @Serializable
-object NoTagFilter: Filter {
+object NoTagFilter : Filter {
     override val description: String = "Collapse any without tag"
 }
 
 @Serializable
-data class LeagueFilter(val leagueSessions: List<LeagueSeason>):Filter{
+data class LeagueFilter(val leagueSessions: List<LeagueSeason>) : Filter {
     override val description: String
         get() = "League in ${leagueSessions.joinToString(",")}"
 }
 
 @Serializable
-data class Composite(val filters: List<Filter>, val operator: CompositeOperator) : Filter{
+data class RoundsFilter(val rounds: List<String>, val leagueSeason: LeagueSeason) : Filter {
     override val description: String
-        get() = TODO("Not yet implemented")
+        get() = "Round ${rounds.joinToString(",")}} in $leagueSeason"
+}
 
+
+@Serializable
+data class Composite(val filters: List<Filter>, val operator: CompositeOperator) : Filter {
+    override val description: String
+        get() = "Composite ${operator.name} ${filters.joinToString(",") { it.description }}"
 }

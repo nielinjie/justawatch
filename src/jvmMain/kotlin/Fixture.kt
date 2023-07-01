@@ -39,6 +39,7 @@ fun oneFixture(je: JsonElement): Fixture? {
         val leagueId =
             je.jsonObject.getByPath("league.id")!!.jsonPrimitive.int
         val season = je.jsonObject.getByPath("league.season")!!.jsonPrimitive.int
+        val round = je.jsonObject.getByPath("league.round")!!.jsonPrimitive.content
         val result: String? =
             if (je.jsonObject.getByPath("goals.home")?.jsonPrimitive?.intOrNull == null) null else je.jsonObject.getByPath(
                 "goals.home"
@@ -46,7 +47,7 @@ fun oneFixture(je: JsonElement): Fixture? {
                 "${it.jsonPrimitive.int} - ${je.jsonObject.getByPath("goals.away")?.jsonPrimitive?.int}"
             }
         if (id != null && timestamp != null && teamA != null && teamB != null && status != null) {
-            return Fixture(id, leagueId to season, timestamp, teamA, teamB, status, result)
+            return Fixture(id, leagueId to season, round, timestamp, teamA, teamB, status, result)
         }
         return null
     } catch (e: Exception) {
@@ -79,10 +80,11 @@ fun findCurrentFixture(fixtures: List<Fixture>): List<Fixture> {
     }
 }
 
-class FixtureScheduler(val app: App): Scheduler  {
+class FixtureScheduler(val app: App) : Scheduler {
     fun fixtures(leagueSeason: LeagueSeason): List<Fixture> {
         return app.fixtureRepository.fixtures.filter { it.leagueSeason == leagueSeason }
     }
+
     override fun next(preResult: TaskResult): Instant {
         return when (preResult) {
             is TaskResult.SUCCESS<*> -> {
@@ -98,6 +100,7 @@ class FixtureScheduler(val app: App): Scheduler  {
                         nextFixture.minus(refreshWhileMatching),
                         now().plus(refreshWhileMatching)
                     ).max()
+
                     else -> now().plus(1.days)
                 }
             }
@@ -109,7 +112,7 @@ class FixtureScheduler(val app: App): Scheduler  {
     }
 }
 
-class FixtureResult ( val leagueSeason: LeagueSeason,val fixtures: List<Fixture>)
+class FixtureResult(val leagueSeason: LeagueSeason, val fixtures: List<Fixture>)
 class FixtureCaller(val app: App, val leagueSeason: LeagueSeason) : ApiCaller<FixtureResult>() {
     override val apiId: String = "fixtures - $leagueSeason"
     override val scheduler: Scheduler = FixtureScheduler(app)
@@ -119,9 +122,15 @@ class FixtureCaller(val app: App, val leagueSeason: LeagueSeason) : ApiCaller<Fi
             override val params: Map<String, String> = leagueSeason.toParams()
             override fun withResponse(stringBody: String): FixtureResult {
                 val fixtures = fromApiResponse(stringBody)
-                app.fixtureRepository.update(fixtures ?: emptyList())
-                return FixtureResult(leagueSeason , (fixtures ?: emptyList()))
+                //TODO 加入最高的过滤，就是整个domain中都不出现。比如足总杯的前段比赛。
+                val roundsFilter = roundsFilter(leagueSeason)
+                val fixturesFiltered = roundsFilter.filter(fixtures ?: emptyList())
+                app.fixtureRepository.update(fixturesFiltered)
+                return FixtureResult(leagueSeason, fixturesFiltered)
             }
         }
+}
 
+fun RoundsFilter.filter(fixtures: List<Fixture>): List<Fixture> {
+    return fixtures.filter { it.round in rounds }
 }
