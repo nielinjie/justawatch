@@ -29,7 +29,9 @@ val defaultAppMe = object : App() {
                     mapOf(
                         UnderLine.COLLAPSED to listOf(
                             NegativeTagsFilter, NoTagFilter
-                        ), UnderLine.HIDDEN to listOf(LeagueFilter(listOf(currentPE, currentCL)))
+                        ),
+                        //NOTE 不在这里面的将标为hidden。
+                        //UnderLine.HIDDEN to listOf(LeagueFilter(listOf(currentPE, currentCL)))
                     ),
 
                     listOf(

@@ -35,5 +35,5 @@ data class FixtureDetailed(
     val standings: Pair<Standing?, Standing?>,
     val teams: Pair<Team, Team>,
     val tags: List<Tag>,
-    val underLines: Set<UnderLine> = emptySet()
+    val underLines: Set<UnderLine> = emptySet(),
 )

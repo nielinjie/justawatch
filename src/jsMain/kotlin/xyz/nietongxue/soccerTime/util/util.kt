@@ -26,3 +26,6 @@ external class ColorU(value:String)
     fun string(): String
 
 }
+
+
+val iconUnkownUrl = "https://cdn1.iconfinder.com/data/icons/ui-set-6/100/Question_Mark-512.png"

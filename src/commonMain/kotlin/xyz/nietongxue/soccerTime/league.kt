@@ -47,6 +47,8 @@ fun LeagueSeason.isCup(): Boolean {
     return first in listOf(45, 2, 3)
 }
 
+val leagueLogos:Map<Int,String> = leagueIds.associateWith { "https://media.api-sports.io/football/leagues/$it.png" }
+
 //NOTE https://rapidapi.com/api-sports/api/api-football/
 //NOTE api: v3/fixtures/rounds
 val roundsOf45 = listOf(

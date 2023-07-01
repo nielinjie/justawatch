@@ -98,6 +98,11 @@ val FixtureComponent = FC<FixtureProps> { props ->
                         tags = this@with.tags
                         this.collapsed = collapsed
                     }
+
+                    LeagueLogoCom  {
+                        fixture = fixtureDetailed.fixture
+                    }
+
                     TeamComponent {
                         team = teams.second
                         direction = Direction.RIGHT
