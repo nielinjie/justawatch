@@ -3,7 +3,6 @@ package xyz.nietongxue.soccerTime
 import kotlinx.serialization.json.*
 
 import kotlinx.datetime.Instant
-import kotlin.math.max
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
@@ -123,8 +122,7 @@ class FixtureCaller(val app: App, val leagueSeason: LeagueSeason) : ApiCaller<Fi
             override fun withResponse(stringBody: String): FixtureResult {
                 val fixtures = fromApiResponse(stringBody)
                 //TODO 加入最高的过滤，就是整个domain中都不出现。比如足总杯的前段比赛。
-                val roundsFilter = roundsFilter(leagueSeason)
-                val fixturesFiltered = roundsFilter.filter(fixtures ?: emptyList())
+                val fixturesFiltered = roundsFilter(leagueSeason).filter(fixtures ?: emptyList())
                 app.fixtureRepository.update(fixturesFiltered)
                 return FixtureResult(leagueSeason, fixturesFiltered)
             }

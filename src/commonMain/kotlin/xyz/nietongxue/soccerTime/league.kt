@@ -15,14 +15,14 @@ typealias SeasonId = Int
 typealias LeagueSeason = Pair<LeagueId, SeasonId>
 
 val leagueIds = listOf(
-    2, // 欧冠
+//    2, // 欧冠
 //    3, // 欧联杯
-//    39, // 英超
-    45, // 英足总杯
+    39, // 英超
+//    45, // 英足总杯
 )
 val seasons = listOf(
-    2022,
-//    2023,
+//    2022,
+    2023,
 )
 
 val currents: List<LeagueSeason> = leagueIds.flatMap { leagueId ->
@@ -31,7 +31,6 @@ val currents: List<LeagueSeason> = leagueIds.flatMap { leagueId ->
     }
 }
 val currentPE: LeagueSeason = 39 to 2023
-val currentCL: LeagueSeason = 2 to 2022
 
 val LeagueSeason.leagueId: Int
     get() = first
