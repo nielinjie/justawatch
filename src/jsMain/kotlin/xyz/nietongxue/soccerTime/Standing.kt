@@ -84,7 +84,7 @@ val FormCom = FC<FormProps> { props ->
                         "W" -> NamedColor.mediumaquamarine
                         "L" -> NamedColor.dimgray
                         "D" -> NamedColor.cornflowerblue
-                        else -> error("not supported")
+                        else -> NamedColor.grey
                     }
                 }
             }
