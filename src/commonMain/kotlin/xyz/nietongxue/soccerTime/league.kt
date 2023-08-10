@@ -15,10 +15,10 @@ typealias SeasonId = Int
 typealias LeagueSeason = Pair<LeagueId, SeasonId>
 
 val leagueIds = listOf(
-//    2, // 欧冠
-//    3, // 欧联杯
+    2, // 欧冠
+    3, // 欧联杯
     39, // 英超
-//    45, // 英足总杯
+    45, // 英足总杯
 )
 val seasons = listOf(
 //    2022,
