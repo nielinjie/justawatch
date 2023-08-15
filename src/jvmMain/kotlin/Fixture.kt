@@ -70,7 +70,7 @@ fun findNextFixture(fixtures: List<Fixture>): Instant? {
     }
 }
 
-val footballMatchTime = 1.8.hours
+val footballMatchTime = 2.2.hours
 val refreshWhileMatching = 10.minutes
 fun findCurrentFixture(fixtures: List<Fixture>): List<Fixture> {
     val now = now()
