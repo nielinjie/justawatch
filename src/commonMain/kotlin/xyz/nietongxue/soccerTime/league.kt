@@ -46,7 +46,7 @@ fun LeagueSeason.isCup(): Boolean {
     return first in listOf(45, 2, 3)
 }
 
-val leagueLogos:Map<Int,String> = leagueIds.associateWith { "https://media.api-sports.io/football/leagues/$it.png" }
+val leagueLogos: Map<Int, String> = leagueIds.associateWith { "https://media.api-sports.io/football/leagues/$it.png" }
 
 //NOTE https://rapidapi.com/api-sports/api/api-football/
 //NOTE api: v3/fixtures/rounds
@@ -76,14 +76,23 @@ val roundsOf45 = listOf(
     "Semi-finals",
     "Final"
 )
+val roundFiltered45 = listOf(
+    "3rd Round",
+    "3rd Round Replays",
+    "4th Round",
+    "4th Round Replays",
+    "5th Round",
+    "Quarter-finals",
+    "Semi-finals",
+    "Final"
+)
 
 fun roundsFilter(season: LeagueSeason): RoundsFilter {
     return RoundsFilter(
-        //drop until 3rd round
         when (season.leagueId) {
-            45 -> roundsOf45.dropWhile { it != "3rd Round" }
-            2 -> roundsOf2.dropWhile { it != "Play-offs" }
-            3 -> roundsOf3.dropWhile { it != "Play-offs" }
+            45 -> roundFiltered45
+            2 -> roundsFiltered2
+            3 -> roundsFiltered3
             39 -> roundsOf39
             else -> error("not supported")
         },
@@ -151,9 +160,76 @@ val roundsOf2 = listOf(
     "Semi-finals",
     "Final"
 )
+val roundsFiltered2 = listOf(
+    "Group E - 1",
+    "Group G - 1",
+    "Group F - 1",
+    "Group H - 1",
+    "Group A - 1",
+    "Group D - 1",
+    "Group B - 1",
+    "Group C - 1",
+    "Group C - 2",
+    "Group D - 2",
+    "Group A - 2",
+    "Group B - 2",
+    "Group E - 2",
+    "Group F - 2",
+    "Group G - 2",
+    "Group H - 2",
+    "Group C - 3",
+    "Group D - 3",
+    "Group A - 3",
+    "Group B - 3",
+    "Group E - 3",
+    "Group F - 3",
+    "Group G - 3",
+    "Group H - 3",
+    "Group G - 4",
+    "Group H - 4",
+    "Group E - 4",
+    "Group F - 4",
+    "Group A - 4",
+    "Group B - 4",
+    "Group C - 4",
+    "Group D - 4",
+    "Group E - 5",
+    "Group G - 5",
+    "Group F - 5",
+    "Group H - 5",
+    "Group B - 5",
+    "Group C - 5",
+    "Group A - 5",
+    "Group D - 5",
+    "Group B - 6",
+    "Group A - 6",
+    "Group C - 6",
+    "Group D - 6",
+    "Group F - 6",
+    "Group E - 6",
+    "Group G - 6",
+    "Group H - 6",
+    "Round of 16",
+    "Quarter-finals",
+    "Semi-finals",
+    "Final"
+)
 val roundsOf3 = listOf(
     "3rd Qualifying Round",
     "Play-offs",
+    "Group Stage - 1",
+    "Group Stage - 2",
+    "Group Stage - 3",
+    "Group Stage - 4",
+    "Group Stage - 5",
+    "Group Stage - 6",
+    "Knockout Round Play-offs",
+    "Round of 16",
+    "Quarter-finals",
+    "Semi-finals",
+    "Final"
+)
+val roundsFiltered3 = listOf(
     "Group Stage - 1",
     "Group Stage - 2",
     "Group Stage - 3",
