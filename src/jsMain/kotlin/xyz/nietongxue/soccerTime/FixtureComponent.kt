@@ -34,7 +34,8 @@ val FixtureComponent = FC<FixtureProps> { props ->
     val fixtureDetailed = props.value
     val durationOffset = durationOffset(fixtureDetailed.fixture.date * 1000, Date.now().toLong())
     fun itemCollapsed(): Boolean {
-        return (durationOffset.after && collapsed) && !expanded
+//        return (durationOffset.after && collapsed) && !expanded
+        return false
     }
 
     with(fixtureDetailed) {
@@ -56,10 +57,7 @@ val FixtureComponent = FC<FixtureProps> { props ->
                 }
                 position = Position.relative
             }
-            //抬头段
-            if (props.underLines.contains(UnderLine.NEXT)) {
 
-            }
             div {
                 css {
                     fontWeight = FontWeight.bolder
