@@ -26,8 +26,6 @@ external interface FixtureProps : Props {
     var underLines: Set<UnderLine>
 }
 
-
-
 val FixtureComponent = FC<FixtureProps> { props ->
     val (expanded, setExpanded) = useState<Boolean>(false)
     val collapsed = props.underLines.contains(UnderLine.COLLAPSED)
