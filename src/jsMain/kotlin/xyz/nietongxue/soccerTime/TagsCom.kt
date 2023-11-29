@@ -48,6 +48,29 @@ val TagsCom = FC<TagsProps> {props->
     }
 }
 
+val TagsHorizontalCom = FC<TagsProps> {props->
+    span {
+        css {
+
+        }
+        if(props.tags.isEmpty() && props.collapsed) {
+            div {
+                css{
+                    color = Color(lb.string())
+                    fontFamily = FontFamily.monospace
+                }
+                +"-"
+            }
+        }
+        props.tags.sortedBy { it.power }.forEach {
+            TagCom {
+                value = it
+                collapsed = props.collapsed
+            }
+        }
+    }
+}
+
 val TagCom = FC<TagProps> {
 
     span {

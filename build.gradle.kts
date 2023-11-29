@@ -40,7 +40,7 @@ kotlin {
     js(IR) {
         binaries.executable()
         browser {
-            commonWebpackConfig{
+            commonWebpackConfig {
                 cssSupport {
                     enabled.set(true)
                 }
@@ -106,7 +106,7 @@ kotlin {
                 implementation(kotlinw("emotion"))
                 implementation(kotlinw("mui"))
                 implementation(kotlinw("mui-icons"))
-                implementation(npm("color","^4.2.3"))
+                implementation(npm("color", "^4.2.3"))
 
             }
         }

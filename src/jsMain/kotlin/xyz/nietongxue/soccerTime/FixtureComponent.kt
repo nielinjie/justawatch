@@ -6,6 +6,7 @@ import react.FC
 import react.Props
 import react.create
 import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.span
 import react.useState
 import kotlin.js.Date
 
@@ -24,6 +25,8 @@ external interface FixtureProps : Props {
     var value: FixtureDetailed
     var underLines: Set<UnderLine>
 }
+
+
 
 val FixtureComponent = FC<FixtureProps> { props ->
     val (expanded, setExpanded) = useState<Boolean>(false)
@@ -99,7 +102,7 @@ val FixtureComponent = FC<FixtureProps> { props ->
                         this.collapsed = collapsed
                     }
 
-                    LeagueLogoCom  {
+                    LeagueLogoCom {
                         fixture = fixtureDetailed.fixture
                     }
 

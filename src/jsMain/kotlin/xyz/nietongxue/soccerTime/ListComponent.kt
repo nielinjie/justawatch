@@ -21,7 +21,7 @@ val ListComponent = FC<Props> {
     var nextFixtureItemDomElement: HTMLLIElement? = null
 
     var fixtures by useState(emptyList<FixtureDetailed>())
-    var first by useState<Int>(-1)
+    var firstAfterNow by useState<Int>(-1)
     var time by useState(Date.now().toLong())
     var openDialog by useState(false)
     fun scrollToCenter() {
@@ -52,7 +52,7 @@ val ListComponent = FC<Props> {
     useEffect(time) {
         scope.launch {
             val f = getFixturesDetailed().sortedBy { it.fixture.date }
-            first = f.indexOfFirst {
+            firstAfterNow = f.indexOfFirst {
                 (it.fixture.date * 1000) > time
             }
             fixtures = f
@@ -89,21 +89,28 @@ val ListComponent = FC<Props> {
             paddingInlineStart = 0.px
         }
 
-        for ((index, fixture) in fixtures.withIndex()) {
-            if (!(fixture.underLines.contains(UnderLine.HIDDEN))) {
-                li {
-                    if (index == first) {
-                        ref = RefCallback {
-                            nextFixtureItemDomElement = it
-                            scrollToCenter()
-                        }
-                    }
-                    className = ClassName("fixture-item")
-                    FixtureComponent {
-                        value = fixture
-                        underLines = if (index == first) (fixture.underLines + UnderLine.NEXT) else fixture.underLines
-                    }
-                }
+//        for ((index, fixture) in fixtures.withIndex()) {
+//            if (!(fixture.underLines.contains(UnderLine.HIDDEN))) {
+//                li {
+//                    if (index == firstAfterNow) {
+//                        ref = RefCallback {
+//                            nextFixtureItemDomElement = it
+//                            scrollToCenter()
+//                        }
+//                    }
+//                    className = ClassName("fixture-item")
+//                    FixtureComponent {
+//                        value = fixture
+//                        underLines =
+//                            if (index == firstAfterNow) (fixture.underLines + UnderLine.NEXT) else fixture.underLines
+//                    }
+//                }
+//            }
+//        }
+        val composited = compositedDetail(fixtures)
+        composited.forEach {
+            ListItemComponent {
+                value = it
             }
         }
     }
