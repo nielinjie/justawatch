@@ -6,8 +6,8 @@ import kotlinx.coroutines.launch
 import mui.material.*
 import react.*
 import react.dom.html.ReactHTML.div
-import react.dom.html.ReactHTML.li
 import react.dom.html.ReactHTML.ul
+import web.html.HTMLElement
 import web.html.HTMLLIElement
 import web.scroll.ScrollBehavior
 import web.scroll.ScrollLogicalPosition
@@ -18,7 +18,7 @@ private val scope = MainScope()
 
 
 val ListComponent = FC<Props> {
-    var nextFixtureItemDomElement: HTMLLIElement? = null
+    var nextFixtureItemDomElement: HTMLElement? = null
 
     var fixtures by useState(emptyList<FixtureDetailed>())
     var firstAfterNow by useState<Int>(-1)
@@ -107,10 +107,14 @@ val ListComponent = FC<Props> {
 //                }
 //            }
 //        }
-        val composited = compositedDetail(fixtures)
-        composited.forEach {
+        val compositedViewMode = compositedDetail(fixtures).toItemViewMode()
+        compositedViewMode.forEach {
             ListItemComponent {
                 value = it
+                callback = {
+                    nextFixtureItemDomElement = it
+                    scrollToCenter()
+                }
             }
         }
     }

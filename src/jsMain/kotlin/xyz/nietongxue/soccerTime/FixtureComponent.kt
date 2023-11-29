@@ -58,17 +58,7 @@ val FixtureComponent = FC<FixtureProps> { props ->
             }
             //抬头段
             if (props.underLines.contains(UnderLine.NEXT)) {
-                div {//clock head
-                    css {
-                        fontFamily = FontFamily.monospace
-                        color = NamedColor.green
-                        fontSize = 22.px
-                        fontWeight = FontWeight.bold
-                        textAlign = TextAlign.center
-                        marginBottom = 12.px
-                    }
-                    +durationOffset.string
-                }
+
             }
             div {
                 css {
