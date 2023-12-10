@@ -58,6 +58,7 @@ val TagsHorizontalCom = FC<TagsProps> {props->
                 css{
                     color = Color(lb.string())
                     fontFamily = FontFamily.monospace
+                    display = Display.inlineBlock
                 }
                 +"-"
             }

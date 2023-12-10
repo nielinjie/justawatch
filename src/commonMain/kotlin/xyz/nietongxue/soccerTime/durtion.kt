@@ -17,8 +17,13 @@ fun toNaturelString(duration: Duration, time: Long): String {
     }
     return duration.toComponents { days, hours, minutes, _, _ ->
         if (days > 0) "$days days"
-        else if (hours > 0) "$hours hours - $string"
-        else if (minutes > 0) "$minutes minutes - $string"
+        else if (hours > 0) {
+            if (minutes > 0) {
+                "$hours h $minutes m - $string"
+            } else {
+                "$hours hours - $string"
+            }
+        } else if (minutes > 0) "$minutes minutes - $string"
         else "now"
     }
 }

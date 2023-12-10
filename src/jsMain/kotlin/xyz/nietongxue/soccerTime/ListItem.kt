@@ -16,13 +16,13 @@ fun compositedDetail(details: List<FixtureDetailed>): CompositedList<FixtureDeta
 
 external interface ListItemProps : Props {
     var value: ItemViewMode
-    var callback: (HTMLElement?)->Unit
+    var callback: (HTMLElement?) -> Unit
 }
 
 interface ItemViewMode
 class SingleFixture(val single: Single<FixtureDetailed>) : ItemViewMode
 class CompositedFixture(val composited: Composited<FixtureDetailed>) : ItemViewMode
-class HeadLight() : ItemViewMode
+class HeadLight(val nextDate: Long) : ItemViewMode
 
 fun CompositedList<FixtureDetailed>.toItemViewMode(): List<ItemViewMode> {
     val list = this.map {
@@ -32,17 +32,31 @@ fun CompositedList<FixtureDetailed>.toItemViewMode(): List<ItemViewMode> {
             else -> error("no known type")
         }
     }
-    val firstIndex: Int = this.indexOfFirst {
-        (when (it) {
+//    val firstIndex: Int = this.indexOfFirst {
+//        (when (it) {
+//            is Single -> it.value
+//            is Composited -> it.values.first()
+//            else -> error("no known type")
+//        }.fixture.date * 1000) > Date.now().toLong()
+//    }
+    this.map {
+        when (it) {
             is Single -> it.value
             is Composited -> it.values.first()
             else -> error("no known type")
-        }.fixture.date * 1000) > Date.now().toLong()
+        }
+    }.withIndex().firstOrNull {
+        it.value.fixture.date * 1000 > Date.now().toLong()
+    }?.let {
+        it.index to it.value.fixture.date * 1000
+    }?.also {
+        val (nextIndex, nextDate) = it
+        return list.toMutableList().also {
+            it.add(nextIndex, HeadLight(nextDate))
+        }
     }
-    return list.toMutableList().also {
-        if(firstIndex>0)
-        it.add(firstIndex, HeadLight())
-    }
+
+    return list
 }
 
 val ListItemComponent = FC<ListItemProps> { props ->
@@ -65,6 +79,7 @@ val ListItemComponent = FC<ListItemProps> { props ->
             is HeadLight -> {
                 HeadLightComponent {
                     callback = props.callback
+                    nextDate = v.nextDate
                 }
             }
 

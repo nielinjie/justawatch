@@ -29,11 +29,3 @@ data class Form(val formChars: List<String>) {
 }
 
 
-@Serializable
-data class FixtureDetailed(
-    val fixture: Fixture,
-    val standings: Pair<Standing?, Standing?>,
-    val teams: Pair<Team, Team>,
-    val tags: List<Tag>,
-    val underLines: Set<UnderLine> = emptySet(),
-)

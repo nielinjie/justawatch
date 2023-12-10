@@ -51,7 +51,7 @@ val ListComponent = FC<Props> {
 
     useEffect(time) {
         scope.launch {
-            val f = getFixturesDetailed().sortedBy { it.fixture.date }
+            val f = getFixturesDetailed().defaultSort()
             firstAfterNow = f.indexOfFirst {
                 (it.fixture.date * 1000) > time
             }

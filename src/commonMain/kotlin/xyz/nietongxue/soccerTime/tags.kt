@@ -26,6 +26,22 @@ data class Tag(
 ) {
 }
 
+fun List<Tag>.sccore(): Int {
+    if (this.isEmpty()) return 0
+    return if (this.any { it.power == Power.NEGATIVE })
+        -1
+    else
+        this.sumOf {
+            when (it.power) {
+                Power.HIGH -> 10
+                Power.MEDIUM -> 2
+                Power.LOW -> 1
+                else -> 0
+            } as Int
+        }
+}
+
+
 @Serializable
 data class FixtureWithTags(
     val fixture: Fixture,
@@ -79,13 +95,13 @@ data class AtNight(val night: Night) : Tagger {
 
 //比如榜首争霸赛
 @Serializable
-data class RankDiff( val rankDiff: Int) : Tagger {
+data class RankDiff(val rankDiff: Int) : Tagger {
     override val description: String = "rankDiff - $rankDiff"
     override val objectType = ObjectType.FIXTURE
 }
 
 @Serializable
-data class PointsDiff( val pointDiff: Int = 3) : Tagger {
+data class PointsDiff(val pointDiff: Int = 3) : Tagger {
     override val description: String = "pointsDiff - $pointDiff"
     override val objectType = ObjectType.FIXTURE
 }
