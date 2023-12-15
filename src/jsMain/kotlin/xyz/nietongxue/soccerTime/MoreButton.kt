@@ -12,6 +12,7 @@ import react.FC
 import react.Props
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.span
+import react.router.dom.Link
 
 external interface MoreProps : Props {
     var onClick: () -> Unit
@@ -19,22 +20,24 @@ external interface MoreProps : Props {
 
 
 val MoreButton = FC<MoreProps> { props ->
-    div {
-        css {
-            display = Display.inlineBlock
-            marginRight = 1.em
-        }
-        Fab {
 
-            onClick = {
-                props.onClick()
+    Link {
+        to = "/custom"
+        div {
+            css {
+                display = Display.inlineBlock
+                marginRight = 1.em
             }
-            color = FabColor.default
-            size = Size.small
-            MoreHoriz {
+            Fab {
+
+
+                color = FabColor.default
+                size = Size.small
+                MoreHoriz {
+
+                }
 
             }
-
         }
     }
 }

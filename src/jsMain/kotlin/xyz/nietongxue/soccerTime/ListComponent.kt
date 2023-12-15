@@ -1,17 +1,20 @@
+package xyz.nietongxue.soccerTime
+
 import csstype.*
 import emotion.react.css
 import js.core.jso
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import mui.material.*
-import react.*
+import react.FC
+import react.Props
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.ul
+import react.router.dom.Link
+import react.useEffect
+import react.useState
 import web.html.HTMLElement
-import web.html.HTMLLIElement
 import web.scroll.ScrollBehavior
 import web.scroll.ScrollLogicalPosition
-import xyz.nietongxue.soccerTime.*
 import kotlin.js.Date
 
 private val scope = MainScope()
@@ -23,7 +26,6 @@ val ListComponent = FC<Props> {
     var fixtures by useState(emptyList<FixtureDetailed>())
     var firstAfterNow by useState<Int>(-1)
     var time by useState(Date.now().toLong())
-    var openDialog by useState(false)
     fun scrollToCenter() {
 //        console.log("scrolling")
 //        console.log(nextFixtureItemDomElement)
@@ -71,9 +73,7 @@ val ListComponent = FC<Props> {
             right = 5.pct
         }
         MoreButton {
-            onClick = {
-                openDialog = true
-            }
+
         }
         ToNowButton {
             onClick = ::scrollAndRefresh
@@ -89,24 +89,6 @@ val ListComponent = FC<Props> {
             paddingInlineStart = 0.px
         }
 
-//        for ((index, fixture) in fixtures.withIndex()) {
-//            if (!(fixture.underLines.contains(UnderLine.HIDDEN))) {
-//                li {
-//                    if (index == firstAfterNow) {
-//                        ref = RefCallback {
-//                            nextFixtureItemDomElement = it
-//                            scrollToCenter()
-//                        }
-//                    }
-//                    className = ClassName("fixture-item")
-//                    FixtureComponent {
-//                        value = fixture
-//                        underLines =
-//                            if (index == firstAfterNow) (fixture.underLines + UnderLine.NEXT) else fixture.underLines
-//                    }
-//                }
-//            }
-//        }
         val compositedViewMode = compositedDetail(fixtures).toItemViewMode()
         compositedViewMode.forEach {
             ListItemComponent {
@@ -120,19 +102,5 @@ val ListComponent = FC<Props> {
     }
 
 
-    Dialog {
-        this.open = openDialog
-        onClose = { _, _ -> openDialog = false }
-        DialogContent {
-            DialogContentText {
-                +"Some Customize here (TODO)"
-            }
-        }
-        DialogActions {
-            Button {
-                onClick = { _ -> openDialog = false }
-                +"OK"
-            }
-        }
-    }
+
 }

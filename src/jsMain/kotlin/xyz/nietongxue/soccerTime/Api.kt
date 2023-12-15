@@ -18,3 +18,13 @@ val jsonClient = HttpClient {
 suspend fun getFixturesDetailed(): List<FixtureDetailed> {
     return jsonClient.get("/api/fixtures/detailed").body()
 }
+
+suspend fun getUserSession(): UserSession? {
+    return jsonClient.get("/api/user/session").let {
+        if (it.status == HttpStatusCode.OK) {
+            it.body()
+        } else {
+            null
+        }
+    }
+}

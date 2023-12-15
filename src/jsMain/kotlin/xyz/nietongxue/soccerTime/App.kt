@@ -1,8 +1,6 @@
 package xyz.nietongxue.soccerTime
 
-import ListComponent
 import csstype.*
-import csstype.HtmlAttributes.Companion.href
 import emotion.react.css
 import react.FC
 import react.Props

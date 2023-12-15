@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 
 val kotlinVersion = "1.8.0"
 val serializationVersion = "1.3.3"
-val ktorVersion = "2.0.3"
+val ktorVersion = "2.3.7"
 val logbackVersion = "1.2.11"
 val kotlinWrappersVersion = "1.0.0-pre.521"
 
@@ -22,13 +22,10 @@ group = "xyz.nietongxue"
 version = "1.0-SNAPSHOT"
 
 repositories {
-//    maven("https://maven.aliyun.com/nexus/content/groups/public/")
-//
-//    maven(
-//        "https://maven.aliyun.com/nexus/content/repositories/jcenter"
-//    )
     mavenCentral()
     maven("https://maven.universablockchain.com/")
+    maven("https://dl.bintray.com/robert-cronin/fortytwoapps")
+
 
 }
 
@@ -55,7 +52,6 @@ kotlin {
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
                 implementation("net.sergeych:mp_stools:1.2.2")
-
             }
         }
 
@@ -75,8 +71,12 @@ kotlin {
                 implementation("io.ktor:ktor-server-compression:$ktorVersion")
                 implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
                 implementation("io.ktor:ktor-server-netty:$ktorVersion")
+                implementation("io.ktor:ktor-server-auth:$ktorVersion")
+
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-client-cio:$ktorVersion")
+                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
                 implementation("io.klogging:klogging-jvm:0.4.13")
                 implementation("org.kodein.di:kodein-di:7.18.0")
@@ -103,10 +103,13 @@ kotlin {
                 implementation(project.dependencies.enforcedPlatform("org.jetbrains.kotlin-wrappers:kotlin-wrappers-bom:$kotlinWrappersVersion"))
                 implementation(kotlinw("react"))
                 implementation(kotlinw("react-dom"))
+                implementation(kotlinw("react-router"))
+                implementation(kotlinw("react-router-dom"))
                 implementation(kotlinw("emotion"))
                 implementation(kotlinw("mui"))
                 implementation(kotlinw("mui-icons"))
                 implementation(npm("color", "^4.2.3"))
+//                implementation("fortytwoapps:kt-cookies:0.0.2")
 
             }
         }

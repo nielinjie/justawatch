@@ -49,4 +49,5 @@ val defaultAppMe = object : App() {
         )
     }
     override val teamRepository: TeamRepository = TeamRepository()
+    override val userRepository: UserRepository = UserRepository()
 }

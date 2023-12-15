@@ -12,6 +12,7 @@ abstract class App {
     abstract val standingRepository: StandingRepository
     abstract val sessionRepository: SessionRepository
     abstract val teamRepository: TeamRepository
+    abstract val userRepository: UserRepository
 }
 
 val defaultApp = object : App() {
@@ -21,5 +22,6 @@ val defaultApp = object : App() {
     override val standingRepository: StandingRepository = StandingRepository()
     override val sessionRepository: SessionRepository = SessionRepository()
     override val teamRepository: TeamRepository = TeamRepository()
+    override val userRepository: UserRepository = UserRepository()
 }
 

@@ -18,3 +18,10 @@ data class Customize(
 ) {
 
 }
+
+
+
+@Serializable
+data class UserSession(val provider: String, val token: String)
+@Serializable
+data class UserInfo(val provider: String, val id: String, val name: String)
