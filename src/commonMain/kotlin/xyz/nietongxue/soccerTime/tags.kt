@@ -95,13 +95,13 @@ data class AtNight(val night: Night) : Tagger {
 
 //比如榜首争霸赛
 @Serializable
-data class RankDiff(val rankDiff: Int) : Tagger {
+data class RankDiff(val leagueId: Int,val rankDiff: Int) : Tagger {
     override val description: String = "rankDiff - $rankDiff"
     override val objectType = ObjectType.FIXTURE
 }
 
 @Serializable
-data class PointsDiff(val pointDiff: Int = 3) : Tagger {
+data class PointsDiff(val leagueId: Int, val pointDiff: Int = 3) : Tagger {
     override val description: String = "pointsDiff - $pointDiff"
     override val objectType = ObjectType.FIXTURE
 }

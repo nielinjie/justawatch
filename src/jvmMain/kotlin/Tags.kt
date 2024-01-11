@@ -105,7 +105,7 @@ class Tagging(private val session: Session, val app: App) {
         return when (tagger) {
             is RankDiff -> {
                 if (leagueSeason.isCup()) return null
-                val (rankDiff) = tagger
+                val rankDiff = tagger.rankDiff
                 val aStanding = app.standingRepository.find(fixture.teamAId, fixture.leagueSeason)
                     ?: error("no standing find for team - $fixture.teamAId")
                 val bStanding = app.standingRepository.find(fixture.teamBId, fixture.leagueSeason)
@@ -121,7 +121,7 @@ class Tagging(private val session: Session, val app: App) {
             is PointsDiff -> {
                 if (leagueSeason.isCup()) return null
 
-                val (pointsDiff) = tagger
+                val pointsDiff = tagger.pointDiff
                 val aStanding = app.standingRepository.find(fixture.teamAId, fixture.leagueSeason)
                     ?: error("no standing find for team - $fixture.teamAId")
                 val bStanding = app.standingRepository.find(fixture.teamBId, fixture.leagueSeason)

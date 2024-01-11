@@ -25,6 +25,8 @@ val fakeApp = object : App() {
             this.update(fs)
         }
     }
+    override val userRepository: UserRepository
+        get() = TODO("Not yet implemented")
 
 }
 
