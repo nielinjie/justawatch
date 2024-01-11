@@ -1,8 +1,6 @@
 package xyz.nietongxue.soccerTime.noUser
 
-import csstype.AlignItems
-import csstype.Display
-import csstype.FlexDirection
+import csstype.*
 import emotion.react.css
 import react.FC
 import react.Props
@@ -15,12 +13,26 @@ val NoUserPage = FC<Props> {
             display = Display.flex
             flexDirection = FlexDirection.column
             alignItems = AlignItems.center
+            fontSize = 2.em
+            fontFamily = FontFamily.monospace
         }
-        +"This is user page"
-
-
+        div {
+            +"This is the page of no user."
+        }
+        div {
+            +"You can do nothing here, until you login."
+        }
     }
+
     div {
+        css {
+            display = Display.flex
+            flexDirection = FlexDirection.column
+            alignItems = AlignItems.center
+            fontSize = 2.em
+            fontFamily = FontFamily.monospace
+        }
+
         a {
             href = "/loginGithub"
             +"Login with Github"

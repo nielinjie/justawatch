@@ -1,16 +1,20 @@
 package xyz.nietongxue.soccerTime.custom
 
-import csstype.AlignItems
-import csstype.Display
-import csstype.FlexDirection
+import csstype.*
 import emotion.react.css
-import io.ktor.http.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import react.*
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToJsonElement
+import kotlinx.serialization.json.jsonObject
+import react.FC
+import react.Props
+import react.dom.html.ReactHTML.br
 import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.pre
 import react.router.useNavigate
-import remix.run.router.redirect
+import react.useEffectOnce
+import react.useState
 import xyz.nietongxue.soccerTime.UserSession
 import xyz.nietongxue.soccerTime.getUserSession
 
@@ -44,20 +48,45 @@ val CustomPage = FC<Props> {
             display = Display.flex
             flexDirection = FlexDirection.column
             alignItems = AlignItems.center
+            fontSize = 2.em
+            fontFamily = FontFamily.monospace
         }
-        +"This is custom page"
+        +"This is the page for customizing your soccer watch. (WIP)"
     }
     if (session.know) {
         if (session.value != null) {
+
             div {
-                +"session is true"
-                +session.toString()
+                css {
+                    display = Display.flex
+                    flexDirection = FlexDirection.column
+                    alignItems = AlignItems.center
+                    fontSize = 2.em
+                    fontFamily = FontFamily.monospace
+                }
+                +"Found your user info, -"
+                br {}
+                pre {
+                    +session.value?.let {
+                        JSON.stringify(it, null, 2)
+                    }
+                }
             }
         } else {
             navigate("/nouser")
         }
     } else {
-        +"session is unkown"
+        div {
+            css {
+                display = Display.flex
+                flexDirection = FlexDirection.column
+                alignItems = AlignItems.center
+                fontSize = 2.em
+                fontFamily = FontFamily.monospace
+            }
+            +"Session is unknown yet, please wait."
+        }
+
     }
 
 }
