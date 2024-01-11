@@ -64,14 +64,15 @@ val CustomPage = FC<Props> {
                     fontSize = 2.em
                     fontFamily = FontFamily.monospace
                 }
-                +"Found your user info, -"
-                br {}
-                pre {
-                    +session.value?.let {
-                        JSON.stringify(it, null, 2)
-                    }
+                +"Found your user info and customizing -"
+            }
+            pre {
+                +session.value?.let {
+                    JSON.stringify(it, null, 2)
                 }
             }
+
+
         } else {
             navigate("/nouser")
         }

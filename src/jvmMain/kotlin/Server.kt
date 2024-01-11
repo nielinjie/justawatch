@@ -35,7 +35,7 @@ val applicationHttpClient = HttpClient(CIO) {
 
 
 fun main() {
-    val productMode: Boolean = System.getenv("productMode") != null
+    val devMode: Boolean = System.getenv("devMode") != null
 
     val port = System.getenv("PORT")?.toInt() ?: 9000
     val callers by diMe.instance<List<ApiCaller<*>>>()
@@ -75,7 +75,10 @@ fun main() {
         install(Authentication) {
             oauth("auth-oauth-github") {
                 // Configure oauth authentication
-                urlProvider = { "http://127.0.0.1:9000/oa/github/callback" }
+                urlProvider = {
+                    if (devMode) "https://127.0.0.1:9000/oa/github/callback"
+                    else "https://justawatch.qingyangyunyun.cloud/oa/github/callback"
+                }
                 providerLookup = {
                     OAuthServerSettings.OAuth2ServerSettings(
                         name = "github",
