@@ -27,7 +27,7 @@ interface Scheduler {
                 return when (preResult) {
                     is TaskResult.SUCCESS<*> -> now().plus(1.hours)
                     TaskResult.INIT -> now().plus(3.seconds)
-                    is TaskResult.ERROR -> now().plus(1.minutes)
+                    is TaskResult.ERROR -> now().plus(10.minutes)
                     else -> error("not supported")
                 }
             }
@@ -37,7 +37,7 @@ interface Scheduler {
                 return when (preResult) {
                     is TaskResult.SUCCESS<*> -> now().plus(1.days)
                     TaskResult.INIT -> now().plus(3.seconds)
-                    is TaskResult.ERROR -> now().plus(1.minutes)
+                    is TaskResult.ERROR -> now().plus(1.hours)
                     else -> error("not supported")
                 }
             }

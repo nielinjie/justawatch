@@ -71,7 +71,7 @@ fun findNextFixture(fixtures: List<Fixture>): Instant? {
 }
 
 val footballMatchTime = 2.2.hours
-val refreshWhileMatching = 10.minutes
+val refreshWhileMatching = 20.minutes
 fun findCurrentFixture(fixtures: List<Fixture>): List<Fixture> {
     val now = now()
     return fixtures.filter {
@@ -105,7 +105,7 @@ class FixtureScheduler(val app: App) : Scheduler {
             }
 
             TaskResult.INIT -> now().plus(3.seconds)
-            is TaskResult.ERROR -> now().plus(1.minutes)
+            is TaskResult.ERROR -> now().plus(10.minutes)
             else -> error("not supported")
         }
     }
